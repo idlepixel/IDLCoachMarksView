@@ -7,7 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import "WSCoachMarksView.h"
+#import "IDLCoachMarksView.h"
 
 static const CGFloat kAnimationDuration = 0.3f;
 static const CGFloat kCutoutRadius = 2.0f;
@@ -15,7 +15,7 @@ static const CGFloat kMaxLblWidth = 230.0f;
 static const CGFloat kLblSpacing = 35.0f;
 static const BOOL kEnableContinueLabel = YES;
 
-@implementation WSCoachMarksView {
+@implementation IDLCoachMarksView {
     CAShapeLayer *mask;
     NSUInteger markIndex;
     UILabel *lblContinue;

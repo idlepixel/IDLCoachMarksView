@@ -38,11 +38,11 @@
   #endif
 #endif
 
-@protocol WSCoachMarksViewDelegate;
+@protocol IDLCoachMarksViewDelegate;
 
-@interface WSCoachMarksView : UIView
+@interface IDLCoachMarksView : UIView
 
-@property (nonatomic, WS_WEAK) id<WSCoachMarksViewDelegate> delegate;
+@property (nonatomic, WS_WEAK) id<IDLCoachMarksViewDelegate> delegate;
 @property (nonatomic, retain) NSArray *coachMarks;
 @property (nonatomic, retain) UILabel *lblCaption;
 @property (nonatomic, retain) UIColor *maskColor;
@@ -57,12 +57,12 @@
 
 @end
 
-@protocol WSCoachMarksViewDelegate <NSObject>
+@protocol IDLCoachMarksViewDelegate <NSObject>
 
 @optional
-- (void)coachMarksView:(WSCoachMarksView*)coachMarksView willNavigateToIndex:(NSUInteger)index;
-- (void)coachMarksView:(WSCoachMarksView*)coachMarksView didNavigateToIndex:(NSUInteger)index;
-- (void)coachMarksViewWillCleanup:(WSCoachMarksView*)coachMarksView;
-- (void)coachMarksViewDidCleanup:(WSCoachMarksView*)coachMarksView;
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSUInteger)index;
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView didNavigateToIndex:(NSUInteger)index;
+- (void)coachMarksViewWillCleanup:(IDLCoachMarksView*)coachMarksView;
+- (void)coachMarksViewDidCleanup:(IDLCoachMarksView*)coachMarksView;
 
 @end
