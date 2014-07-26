@@ -1,0 +1,469 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A708BA1A1983D69B00658DA1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA191983D69B00658DA1 /* Foundation.framework */; };
+		A708BA1C1983D69B00658DA1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA1B1983D69B00658DA1 /* CoreGraphics.framework */; };
+		A708BA1E1983D69B00658DA1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA1D1983D69B00658DA1 /* UIKit.framework */; };
+		A708BA241983D69B00658DA1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A708BA221983D69B00658DA1 /* InfoPlist.strings */; };
+		A708BA261983D69B00658DA1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA251983D69B00658DA1 /* main.m */; };
+		A708BA2A1983D69B00658DA1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA291983D69B00658DA1 /* AppDelegate.m */; };
+		A708BA2D1983D69B00658DA1 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A708BA2B1983D69B00658DA1 /* Main_iPhone.storyboard */; };
+		A708BA301983D69B00658DA1 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */; };
+		A708BA331983D69B00658DA1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA321983D69B00658DA1 /* ViewController.m */; };
+		A708BA351983D69B00658DA1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A708BA341983D69B00658DA1 /* Images.xcassets */; };
+		A708BA3C1983D69C00658DA1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA3B1983D69C00658DA1 /* XCTest.framework */; };
+		A708BA3D1983D69C00658DA1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA191983D69B00658DA1 /* Foundation.framework */; };
+		A708BA3E1983D69C00658DA1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA1D1983D69B00658DA1 /* UIKit.framework */; };
+		A708BA541983D86700658DA1 /* IDLCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA531983D86700658DA1 /* IDLCoachMarksView.m */; };
+		A708BA551983D86700658DA1 /* IDLCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA531983D86700658DA1 /* IDLCoachMarksView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A708BA3F1983D69C00658DA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A708BA0E1983D69B00658DA1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A708BA151983D69B00658DA1;
+			remoteInfo = IDLCoachMarksViewExample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A708BA161983D69B00658DA1 /* IDLCoachMarksViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IDLCoachMarksViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A708BA191983D69B00658DA1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A708BA1B1983D69B00658DA1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A708BA1D1983D69B00658DA1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A708BA211983D69B00658DA1 /* IDLCoachMarksViewExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDLCoachMarksViewExample-Info.plist"; sourceTree = "<group>"; };
+		A708BA231983D69B00658DA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A708BA251983D69B00658DA1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A708BA271983D69B00658DA1 /* IDLCoachMarksViewExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDLCoachMarksViewExample-Prefix.pch"; sourceTree = "<group>"; };
+		A708BA281983D69B00658DA1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A708BA291983D69B00658DA1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		A708BA2C1983D69B00658DA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		A708BA2F1983D69B00658DA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		A708BA311983D69B00658DA1 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		A708BA321983D69B00658DA1 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		A708BA341983D69B00658DA1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		A708BA3A1983D69C00658DA1 /* IDLCoachMarksViewExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IDLCoachMarksViewExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A708BA3B1983D69C00658DA1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A708BA521983D86700658DA1 /* IDLCoachMarksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDLCoachMarksView.h; sourceTree = "<group>"; };
+		A708BA531983D86700658DA1 /* IDLCoachMarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDLCoachMarksView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A708BA131983D69B00658DA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A708BA1C1983D69B00658DA1 /* CoreGraphics.framework in Frameworks */,
+				A708BA1E1983D69B00658DA1 /* UIKit.framework in Frameworks */,
+				A708BA1A1983D69B00658DA1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A708BA371983D69C00658DA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A708BA3C1983D69C00658DA1 /* XCTest.framework in Frameworks */,
+				A708BA3E1983D69C00658DA1 /* UIKit.framework in Frameworks */,
+				A708BA3D1983D69C00658DA1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A708BA0D1983D69B00658DA1 = {
+			isa = PBXGroup;
+			children = (
+				A708BA511983D86700658DA1 /* IDLCoachMarksView */,
+				A708BA1F1983D69B00658DA1 /* Example */,
+				A708BA181983D69B00658DA1 /* Frameworks */,
+				A708BA171983D69B00658DA1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A708BA171983D69B00658DA1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A708BA161983D69B00658DA1 /* IDLCoachMarksViewExample.app */,
+				A708BA3A1983D69C00658DA1 /* IDLCoachMarksViewExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A708BA181983D69B00658DA1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A708BA191983D69B00658DA1 /* Foundation.framework */,
+				A708BA1B1983D69B00658DA1 /* CoreGraphics.framework */,
+				A708BA1D1983D69B00658DA1 /* UIKit.framework */,
+				A708BA3B1983D69C00658DA1 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A708BA1F1983D69B00658DA1 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				A708BA281983D69B00658DA1 /* AppDelegate.h */,
+				A708BA291983D69B00658DA1 /* AppDelegate.m */,
+				A708BA2B1983D69B00658DA1 /* Main_iPhone.storyboard */,
+				A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */,
+				A708BA311983D69B00658DA1 /* ViewController.h */,
+				A708BA321983D69B00658DA1 /* ViewController.m */,
+				A708BA341983D69B00658DA1 /* Images.xcassets */,
+				A708BA201983D69B00658DA1 /* Supporting Files */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
+		A708BA201983D69B00658DA1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A708BA211983D69B00658DA1 /* IDLCoachMarksViewExample-Info.plist */,
+				A708BA221983D69B00658DA1 /* InfoPlist.strings */,
+				A708BA251983D69B00658DA1 /* main.m */,
+				A708BA271983D69B00658DA1 /* IDLCoachMarksViewExample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A708BA511983D86700658DA1 /* IDLCoachMarksView */ = {
+			isa = PBXGroup;
+			children = (
+				A708BA521983D86700658DA1 /* IDLCoachMarksView.h */,
+				A708BA531983D86700658DA1 /* IDLCoachMarksView.m */,
+			);
+			path = IDLCoachMarksView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A708BA151983D69B00658DA1 /* IDLCoachMarksViewExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A708BA4B1983D69C00658DA1 /* Build configuration list for PBXNativeTarget "IDLCoachMarksViewExample" */;
+			buildPhases = (
+				A708BA121983D69B00658DA1 /* Sources */,
+				A708BA131983D69B00658DA1 /* Frameworks */,
+				A708BA141983D69B00658DA1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IDLCoachMarksViewExample;
+			productName = IDLCoachMarksViewExample;
+			productReference = A708BA161983D69B00658DA1 /* IDLCoachMarksViewExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A708BA391983D69C00658DA1 /* IDLCoachMarksViewExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A708BA4E1983D69C00658DA1 /* Build configuration list for PBXNativeTarget "IDLCoachMarksViewExampleTests" */;
+			buildPhases = (
+				A708BA361983D69C00658DA1 /* Sources */,
+				A708BA371983D69C00658DA1 /* Frameworks */,
+				A708BA381983D69C00658DA1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A708BA401983D69C00658DA1 /* PBXTargetDependency */,
+			);
+			name = IDLCoachMarksViewExampleTests;
+			productName = IDLCoachMarksViewExampleTests;
+			productReference = A708BA3A1983D69C00658DA1 /* IDLCoachMarksViewExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A708BA0E1983D69B00658DA1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Idlepixel;
+				TargetAttributes = {
+					A708BA391983D69C00658DA1 = {
+						TestTargetID = A708BA151983D69B00658DA1;
+					};
+				};
+			};
+			buildConfigurationList = A708BA111983D69B00658DA1 /* Build configuration list for PBXProject "IDLCoachMarksViewExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A708BA0D1983D69B00658DA1;
+			productRefGroup = A708BA171983D69B00658DA1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A708BA151983D69B00658DA1 /* IDLCoachMarksViewExample */,
+				A708BA391983D69C00658DA1 /* IDLCoachMarksViewExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A708BA141983D69B00658DA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A708BA301983D69B00658DA1 /* Main_iPad.storyboard in Resources */,
+				A708BA351983D69B00658DA1 /* Images.xcassets in Resources */,
+				A708BA2D1983D69B00658DA1 /* Main_iPhone.storyboard in Resources */,
+				A708BA241983D69B00658DA1 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A708BA381983D69C00658DA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A708BA121983D69B00658DA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A708BA331983D69B00658DA1 /* ViewController.m in Sources */,
+				A708BA2A1983D69B00658DA1 /* AppDelegate.m in Sources */,
+				A708BA541983D86700658DA1 /* IDLCoachMarksView.m in Sources */,
+				A708BA261983D69B00658DA1 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A708BA361983D69C00658DA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A708BA551983D86700658DA1 /* IDLCoachMarksView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A708BA401983D69C00658DA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A708BA151983D69B00658DA1 /* IDLCoachMarksViewExample */;
+			targetProxy = A708BA3F1983D69C00658DA1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A708BA221983D69B00658DA1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A708BA231983D69B00658DA1 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A708BA2B1983D69B00658DA1 /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A708BA2C1983D69B00658DA1 /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A708BA2F1983D69B00658DA1 /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A708BA491983D69C00658DA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A708BA4A1983D69C00658DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A708BA4C1983D69C00658DA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Example/IDLCoachMarksViewExample-Prefix.pch";
+				INFOPLIST_FILE = "Example/IDLCoachMarksViewExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A708BA4D1983D69C00658DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Example/IDLCoachMarksViewExample-Prefix.pch";
+				INFOPLIST_FILE = "Example/IDLCoachMarksViewExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		A708BA4F1983D69C00658DA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/IDLCoachMarksViewExample.app/IDLCoachMarksViewExample";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IDLCoachMarksViewExample/IDLCoachMarksViewExample-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "IDLCoachMarksViewExampleTests/IDLCoachMarksViewExampleTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		A708BA501983D69C00658DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/IDLCoachMarksViewExample.app/IDLCoachMarksViewExample";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IDLCoachMarksViewExample/IDLCoachMarksViewExample-Prefix.pch";
+				INFOPLIST_FILE = "IDLCoachMarksViewExampleTests/IDLCoachMarksViewExampleTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A708BA111983D69B00658DA1 /* Build configuration list for PBXProject "IDLCoachMarksViewExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A708BA491983D69C00658DA1 /* Debug */,
+				A708BA4A1983D69C00658DA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A708BA4B1983D69C00658DA1 /* Build configuration list for PBXNativeTarget "IDLCoachMarksViewExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A708BA4C1983D69C00658DA1 /* Debug */,
+				A708BA4D1983D69C00658DA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A708BA4E1983D69C00658DA1 /* Build configuration list for PBXNativeTarget "IDLCoachMarksViewExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A708BA4F1983D69C00658DA1 /* Debug */,
+				A708BA501983D69C00658DA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A708BA0E1983D69B00658DA1 /* Project object */;
+}
