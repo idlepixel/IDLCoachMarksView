@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Idlepixel. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "ExampleAppDelegate.h"
 
-@implementation AppDelegate
+@implementation ExampleAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
