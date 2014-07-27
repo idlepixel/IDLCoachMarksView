@@ -28,40 +28,41 @@
 
 #import <UIKit/UIKit.h>
 
-#ifndef WS_WEAK
-  #if __has_feature(objc_arc_weak)
-    #define WS_WEAK weak
-  #elif __has_feature(objc_arc)
-    #define WS_WEAK unsafe_unretained
-  #else
-    #define WS_WEAK assign
-  #endif
-#endif
-
 @protocol IDLCoachMarksViewDelegate;
+@protocol IDLCoachMarksViewDataSource;
 
 @interface IDLCoachMarksView : UIView
 
-@property (nonatomic, WS_WEAK) id<IDLCoachMarksViewDelegate> delegate;
-@property (nonatomic, retain) NSArray *coachMarks;
-@property (nonatomic, retain) UILabel *lblCaption;
-@property (nonatomic, retain) UIColor *maskColor;
-@property (nonatomic) CGFloat animationDuration;
-@property (nonatomic) CGFloat cutoutRadius;
-@property (nonatomic) CGFloat maxLblWidth;
-@property (nonatomic) CGFloat lblSpacing;
-@property (nonatomic) BOOL enableContinueLabel;
+@property (nonatomic, weak) id<IDLCoachMarksViewDelegate> delegate;
+@property (nonatomic, weak) id<IDLCoachMarksViewDataSource> dataSource;
 
-- (id)initWithFrame:(CGRect)frame coachMarks:(NSArray *)marks;
+@property (nonatomic, strong) UIColor *maskColor;
+
+@property (nonatomic, assign) CGFloat animationDuration;
+@property (nonatomic, assign) CGFloat cutoutPadding;
+@property (nonatomic, assign) CGFloat maximumLabelWidth;
+@property (nonatomic, assign) CGFloat labelSpacing;
+@property (nonatomic, assign) BOOL enableContinueLabel;
+
+- (id)initWithFrame:(CGRect)frame;
 - (void)start;
+
+@end
+
+@protocol IDLCoachMarksViewDataSource <NSObject>
+
+@required
+- (NSInteger)numberOfCoachMarksInView:(IDLCoachMarksView *)view;
+- (CGRect)coachMarksView:(IDLCoachMarksView *)view rectAtIndex:(NSInteger)index;
+- (NSString *)coachMarksView:(IDLCoachMarksView *)view captionAtIndex:(NSInteger)index;
 
 @end
 
 @protocol IDLCoachMarksViewDelegate <NSObject>
 
 @optional
-- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSUInteger)index;
-- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView didNavigateToIndex:(NSUInteger)index;
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSInteger)index;
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView didNavigateToIndex:(NSInteger)index;
 - (void)coachMarksViewWillCleanup:(IDLCoachMarksView*)coachMarksView;
 - (void)coachMarksViewDidCleanup:(IDLCoachMarksView*)coachMarksView;
 

@@ -15,39 +15,22 @@ static const CGFloat kMaxLblWidth = 230.0f;
 static const CGFloat kLblSpacing = 35.0f;
 static const BOOL kEnableContinueLabel = YES;
 
-@implementation IDLCoachMarksView {
-    CAShapeLayer *mask;
-    NSUInteger markIndex;
-    UILabel *lblContinue;
-}
+@interface IDLCoachMarksView ()
 
-#pragma mark - Properties
+@property (nonatomic, strong) UILabel *captionLabel;
+@property (nonatomic, strong) CAShapeLayer *mask;
+@property (nonatomic, strong) UILabel *continueLabel;
 
-@synthesize delegate;
-@synthesize coachMarks;
-@synthesize lblCaption;
-@synthesize maskColor = _maskColor;
-@synthesize animationDuration;
-@synthesize cutoutRadius;
-@synthesize maxLblWidth;
-@synthesize lblSpacing;
-@synthesize enableContinueLabel;
+@property (nonatomic, strong) NSNumber *currentIndex;
+
+@end
+
+@implementation IDLCoachMarksView
 
 #pragma mark - Methods
 
-- (id)initWithFrame:(CGRect)frame coachMarks:(NSArray *)marks {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Save the coach marks
-        self.coachMarks = marks;
-
-        // Setup
-        [self setup];
-    }
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         // Setup
@@ -56,7 +39,8 @@ static const BOOL kEnableContinueLabel = YES;
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Setup
@@ -65,58 +49,72 @@ static const BOOL kEnableContinueLabel = YES;
     return self;
 }
 
-- (void)setup {
+- (void)setup
+{
     // Default
     self.animationDuration = kAnimationDuration;
-    self.cutoutRadius = kCutoutRadius;
-    self.maxLblWidth = kMaxLblWidth;
-    self.lblSpacing = kLblSpacing;
+    self.cutoutPadding = kCutoutRadius;
+    self.maximumLabelWidth = kMaxLblWidth;
+    self.labelSpacing = kLblSpacing;
     self.enableContinueLabel = kEnableContinueLabel;
 
     // Shape layer mask
-    mask = [CAShapeLayer layer];
+    CAShapeLayer *mask = [CAShapeLayer layer];
     [mask setFillRule:kCAFillRuleEvenOdd];
     [mask setFillColor:[[UIColor colorWithHue:0.0f saturation:0.0f brightness:0.0f alpha:0.9f] CGColor]];
     [self.layer addSublayer:mask];
+    self.mask = mask;
 
     // Capture touches
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userDidTap:)];
     [self addGestureRecognizer:tapGestureRecognizer];
 
     // Captions
-    self.lblCaption = [[UILabel alloc] initWithFrame:(CGRect){{0.0f, 0.0f}, {self.maxLblWidth, 0.0f}}];
-    self.lblCaption.backgroundColor = [UIColor clearColor];
-    self.lblCaption.textColor = [UIColor whiteColor];
-    self.lblCaption.font = [UIFont systemFontOfSize:20.0f];
-    self.lblCaption.lineBreakMode = NSLineBreakByWordWrapping;
-    self.lblCaption.numberOfLines = 0;
-    self.lblCaption.textAlignment = NSTextAlignmentCenter;
-    self.lblCaption.alpha = 0.0f;
-    [self addSubview:self.lblCaption];
+    self.captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.maximumLabelWidth, 0.0f)];
+    self.captionLabel.backgroundColor = [UIColor clearColor];
+    self.captionLabel.textColor = [UIColor whiteColor];
+    self.captionLabel.font = [UIFont systemFontOfSize:20.0f];
+    self.captionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    self.captionLabel.numberOfLines = 0;
+    self.captionLabel.textAlignment = NSTextAlignmentCenter;
+    self.captionLabel.alpha = 0.0f;
+    [self addSubview:self.captionLabel];
 
     // Hide until unvoked
     self.hidden = YES;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    if (self.currentIndex && self.currentIndex.integerValue >= 0) {
+        [self goToCoachMarkIndexed:self.currentIndex.integerValue];
+    }
+}
+
 #pragma mark - Cutout modify
 
-- (void)setCutoutToRect:(CGRect)rect {
+- (void)setCutoutToRect:(CGRect)rect
+{
     // Define shape
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.cutoutRadius];
+    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.cutoutPadding];
     [maskPath appendPath:cutoutPath];
 
     // Set the new path
-    mask.path = maskPath.CGPath;
+    self.mask.path = maskPath.CGPath;
 }
 
-- (void)animateCutoutToRect:(CGRect)rect {
+- (void)animateCutoutToRect:(CGRect)rect
+{
     // Define shape
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.cutoutRadius];
+    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.cutoutPadding];
     [maskPath appendPath:cutoutPath];
-
+    
     // Animate it
+    CAShapeLayer *mask = self.mask;
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"path"];
     anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -131,21 +129,28 @@ static const BOOL kEnableContinueLabel = YES;
 
 #pragma mark - Mask color
 
-- (void)setMaskColor:(UIColor *)maskColor {
+- (void)setMaskColor:(UIColor *)maskColor
+{
     _maskColor = maskColor;
-    [mask setFillColor:[maskColor CGColor]];
+    [self.mask setFillColor:[maskColor CGColor]];
 }
 
 #pragma mark - Touch handler
 
-- (void)userDidTap:(UITapGestureRecognizer *)recognizer {
+- (void)userDidTap:(UITapGestureRecognizer *)recognizer
+{
     // Go to the next coach mark
-    [self goToCoachMarkIndexed:(markIndex+1)];
+    NSInteger index = 0;
+    if (self.currentIndex) {
+        index = self.currentIndex.integerValue + 1;
+    }
+    [self goToCoachMarkIndexed:index];
 }
 
 #pragma mark - Navigation
 
-- (void)start {
+- (void)start
+{
     // Fade in self
     self.alpha = 0.0f;
     self.hidden = NO;
@@ -159,46 +164,47 @@ static const BOOL kEnableContinueLabel = YES;
                      }];
 }
 
-- (void)goToCoachMarkIndexed:(NSUInteger)index {
+- (void)goToCoachMarkIndexed:(NSUInteger)index
+{
+    
     // Out of bounds
-    if (index >= self.coachMarks.count) {
+    if (index >= [self dataSourceNumberOfCoachMarks]) {
         [self cleanup];
         return;
     }
 
     // Current index
-    markIndex = index;
+    self.currentIndex = @(index);
 
     // Coach mark definition
-    NSDictionary *markDef = [self.coachMarks objectAtIndex:index];
-    NSString *markCaption = [markDef objectForKey:@"caption"];
-    CGRect markRect = [[markDef objectForKey:@"rect"] CGRectValue];
+    NSString *markCaption = [self dataSourceCaptionAtIndex:index];
+    CGRect markRect = [self dataSourceRectAtIndex:index];
 
     // Delegate (coachMarksView:willNavigateTo:atIndex:)
     if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndex:)]) {
-        [self.delegate coachMarksView:self willNavigateToIndex:markIndex];
+        [self.delegate coachMarksView:self willNavigateToIndex:index];
     }
 
     // Calculate the caption position and size
-    self.lblCaption.alpha = 0.0f;
-    self.lblCaption.frame = (CGRect){{0.0f, 0.0f}, {self.maxLblWidth, 0.0f}};
-    self.lblCaption.text = markCaption;
-    [self.lblCaption sizeToFit];
-    CGFloat y = markRect.origin.y + markRect.size.height + self.lblSpacing;
-    CGFloat bottomY = y + self.lblCaption.frame.size.height + self.lblSpacing;
+    self.captionLabel.alpha = 0.0f;
+    self.captionLabel.frame = CGRectMake(0.0f, 0.0f, self.maximumLabelWidth, 0.0f);
+    self.captionLabel.text = markCaption;
+    [self.captionLabel sizeToFit];
+    CGFloat y = markRect.origin.y + markRect.size.height + self.labelSpacing;
+    CGFloat bottomY = y + self.captionLabel.frame.size.height + self.labelSpacing;
     if (bottomY > self.bounds.size.height) {
-        y = markRect.origin.y - self.lblSpacing - self.lblCaption.frame.size.height;
+        y = markRect.origin.y - self.labelSpacing - self.captionLabel.frame.size.height;
     }
-    CGFloat x = floorf((self.bounds.size.width - self.lblCaption.frame.size.width) / 2.0f);
+    CGFloat x = floorf((self.bounds.size.width - self.captionLabel.frame.size.width) / 2.0f);
 
     // Animate the caption label
-    self.lblCaption.frame = (CGRect){{x, y}, self.lblCaption.frame.size};
+    self.captionLabel.frame = (CGRect){{x, y}, self.captionLabel.frame.size};
     [UIView animateWithDuration:0.3f animations:^{
-        self.lblCaption.alpha = 1.0f;
+        self.captionLabel.alpha = 1.0f;
     }];
 
     // If first mark, set the cutout to the center of first mark
-    if (markIndex == 0) {
+    if (index == 0) {
         CGPoint center = CGPointMake(floorf(markRect.origin.x + (markRect.size.width / 2.0f)), floorf(markRect.origin.y + (markRect.size.height / 2.0f)));
         CGRect centerZero = (CGRect){center, CGSizeZero};
         [self setCutoutToRect:centerZero];
@@ -209,28 +215,36 @@ static const BOOL kEnableContinueLabel = YES;
 
     // Show continue lbl if first mark
     if (self.enableContinueLabel) {
-        if (markIndex == 0) {
-            lblContinue = [[UILabel alloc] initWithFrame:(CGRect){{0, self.bounds.size.height - 30.0f}, {self.bounds.size.width, 30.0f}}];
-            lblContinue.font = [UIFont boldSystemFontOfSize:13.0f];
-            lblContinue.textAlignment = NSTextAlignmentCenter;
-            lblContinue.text = @"Tap to continue";
-            lblContinue.alpha = 0.0f;
-            lblContinue.backgroundColor = [UIColor whiteColor];
-            [self addSubview:lblContinue];
+        UILabel *continueLabel = self.continueLabel;
+        if (index == 0) {
+            CGRect continueLabelRect = CGRectMake(0.0f, self.bounds.size.height - 30.0f, self.bounds.size.width, 30.0f);
+            if (continueLabel == nil) {
+                continueLabel = [[UILabel alloc] initWithFrame:continueLabelRect];
+                continueLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+                continueLabel.textAlignment = NSTextAlignmentCenter;
+                continueLabel.text = @"Tap to continue";
+                continueLabel.alpha = 0.0f;
+                continueLabel.backgroundColor = [UIColor whiteColor];
+                [self addSubview:continueLabel];
+                self.continueLabel = continueLabel;
+            } else {
+                continueLabel.frame = continueLabelRect;
+            }
             [UIView animateWithDuration:0.3f delay:1.0f options:0 animations:^{
-                lblContinue.alpha = 1.0f;
+                continueLabel.alpha = 1.0f;
             } completion:nil];
-        } else if (markIndex > 0 && lblContinue != nil) {
+        } else if (index > 0 && continueLabel != nil) {
             // Otherwise, remove the lbl
-            [lblContinue removeFromSuperview];
-            lblContinue = nil;
+            [continueLabel removeFromSuperview];
+            continueLabel = nil;
         }
     }
 }
 
 #pragma mark - Cleanup
 
-- (void)cleanup {
+- (void)cleanup
+{
     // Delegate (coachMarksViewWillCleanup:)
     if ([self.delegate respondsToSelector:@selector(coachMarksViewWillCleanup:)]) {
         [self.delegate coachMarksViewWillCleanup:self];
@@ -254,10 +268,38 @@ static const BOOL kEnableContinueLabel = YES;
 
 #pragma mark - Animation delegate
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
     // Delegate (coachMarksView:didNavigateTo:atIndex:)
     if ([self.delegate respondsToSelector:@selector(coachMarksView:didNavigateToIndex:)]) {
-        [self.delegate coachMarksView:self didNavigateToIndex:markIndex];
+        [self.delegate coachMarksView:self didNavigateToIndex:self.currentIndex.integerValue];
+    }
+}
+
+- (NSInteger)dataSourceNumberOfCoachMarks
+{
+    if ([self.dataSource respondsToSelector:@selector(numberOfCoachMarksInView:)]) {
+        return [self.dataSource numberOfCoachMarksInView:self];
+    } else {
+        return 0;
+    }
+}
+
+- (CGRect)dataSourceRectAtIndex:(NSInteger)index
+{
+    if ([self.dataSource respondsToSelector:@selector(coachMarksView:rectAtIndex:)]) {
+        return [self.dataSource coachMarksView:self rectAtIndex:index];
+    } else {
+        return CGRectNull;
+    }
+}
+
+- (NSString *)dataSourceCaptionAtIndex:(NSInteger)index
+{
+    if ([self.dataSource respondsToSelector:@selector(coachMarksView:captionAtIndex:)]) {
+        return [self.dataSource coachMarksView:self captionAtIndex:index];
+    } else {
+        return nil;
     }
 }
 
