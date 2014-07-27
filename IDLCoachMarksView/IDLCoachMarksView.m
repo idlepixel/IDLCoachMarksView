@@ -11,10 +11,16 @@
 
 static const CGFloat kIDLCoachMarksViewDefaultAnimationDuration = 0.3f;
 static const CGFloat kIDLCoachMarksViewDefaultCutoutRounding = 2.0f;
-static const CGFloat kIDLCoachMarksViewDefaultCutoutPadding = 2.0f;
+static const CGFloat kIDLCoachMarksViewDefaultCutoutPadding = 30.0f;
 static const CGFloat kIDLCoachMarksViewDefaultMaximumLabelWidth = 230.0f;
 static const CGFloat kIDLCoachMarksViewDefaultLabelSpacing = 35.0f;
 static const BOOL kEnableContinueLabel = YES;
+
+
+CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
+{
+    return size.width * size.height;
+}
 
 @interface IDLCoachMarksView ()
 
@@ -33,13 +39,14 @@ static const BOOL kEnableContinueLabel = YES;
     CGRect result = CGRectNull;
     
     if (referenceView != nil && viewArray.count > 0) {
+        
         UIView *view = nil;
         for (NSInteger i = 0; i < viewArray.count; i++) {
             if ([[viewArray objectAtIndex:i] isKindOfClass:[UIView class]]) {
                 view = [viewArray objectAtIndex:i];
                 if (view.window == referenceView.window) {
                     CGRect viewRect = [referenceView convertRect:view.bounds fromView:view];
-                    if (!CGRectEqualToRect(viewRect, CGRectNull) && (viewRect.size.width > 0.0f) && (viewRect.size.height > 0.0f)) {
+                    if (!CGRectEqualToRect(viewRect, CGRectNull) && IDLCoachMarkViewCGSizeArea(viewRect.size) > 0.0f) {
                         if (CGRectEqualToRect(result, CGRectNull)) {
                             result = viewRect;
                         } else {
@@ -100,6 +107,7 @@ static const BOOL kEnableContinueLabel = YES;
     // Default
     self.animationDuration = kIDLCoachMarksViewDefaultAnimationDuration;
     self.cutoutRounding = kIDLCoachMarksViewDefaultCutoutRounding;
+    self.cutoutPadding = kIDLCoachMarksViewDefaultCutoutPadding;
     self.maximumLabelWidth = kIDLCoachMarksViewDefaultMaximumLabelWidth;
     self.labelSpacing = kIDLCoachMarksViewDefaultLabelSpacing;
     self.enableContinueLabel = kEnableContinueLabel;
@@ -134,8 +142,19 @@ static const BOOL kEnableContinueLabel = YES;
 {
     [super layoutSubviews];
     
-    if (self.currentIndex && self.currentIndex.integerValue >= 0) {
-        [self showCoachMarkAtIndex:self.currentIndex.integerValue];
+}
+
+-(void)setFrame:(CGRect)frame
+{
+    BOOL changed = (!CGRectEqualToRect(frame, super.frame));
+    
+    super.frame = frame;
+    
+    if (changed) {
+        NSLog(@"frame changed: %@",NSStringFromCGRect(frame));
+        if (self.currentIndex && self.currentIndex.integerValue >= 0) {
+            [self showCoachMarkAtIndex:self.currentIndex.integerValue animated:NO];
+        }
     }
 }
 
@@ -143,9 +162,19 @@ static const BOOL kEnableContinueLabel = YES;
 
 - (UIBezierPath *)maskPathForCutout:(CGRect)cutout
 {
+    NSLog(@"cutout: %@",NSStringFromCGRect(cutout));
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding];
-    [maskPath appendPath:cutoutPath];
+    if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
+        CGFloat padding = self.cutoutPadding;
+        if (padding != 0.0f) {
+            cutout = CGRectInset(cutout, -padding, -padding);
+            NSLog(@"cutout inset: %@",NSStringFromCGRect(cutout));
+        }
+        if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
+            UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding];
+            [maskPath appendPath:cutoutPath];
+        }
+    }
     return maskPath;
 }
 
@@ -168,13 +197,13 @@ static const BOOL kEnableContinueLabel = YES;
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"path"];
     anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    anim.duration = self.animationDuration;
+    anim.duration = 2.0f;
     anim.removedOnCompletion = NO;
     anim.fillMode = kCAFillModeForwards;
     anim.fromValue = (__bridge id)(mask.path);
     anim.toValue = (__bridge id)(maskPath.CGPath);
     [mask addAnimation:anim forKey:@"path"];
-    mask.path = maskPath.CGPath;
+    //mask.path = maskPath.CGPath;
 }
 
 #pragma mark - Mask color
@@ -194,7 +223,7 @@ static const BOOL kEnableContinueLabel = YES;
     if (self.currentIndex) {
         index = self.currentIndex.integerValue + 1;
     }
-    [self showCoachMarkAtIndex:index];
+    [self showCoachMarkAtIndex:index animated:YES];
 }
 
 #pragma mark - Navigation
@@ -210,12 +239,13 @@ static const BOOL kEnableContinueLabel = YES;
                      }
                      completion:^(BOOL finished) {
                          // Go to the first coach mark
-                         [self showCoachMarkAtIndex:0];
+                         [self showCoachMarkAtIndex:0 animated:YES];
                      }];
 }
 
-- (void)showCoachMarkAtIndex:(NSUInteger)index
+- (void)showCoachMarkAtIndex:(NSUInteger)index animated:(BOOL)animated
 {
+    NSLog(@"index: %i",index);
     
     // Out of bounds
     if (index >= [self dataSourceNumberOfCoachMarks]) {
@@ -229,7 +259,9 @@ static const BOOL kEnableContinueLabel = YES;
     // Coach mark definition
     NSString *markCaption = [self dataSourceCaptionAtIndex:index];
     CGRect markRect = [self dataSourceRectAtIndex:index];
-
+    
+    NSLog(@"markRect: %@",NSStringFromCGRect(markRect));
+    
     // Delegate (coachMarksView:willNavigateTo:atIndex:)
     if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndex:)]) {
         [self.delegate coachMarksView:self willNavigateToIndex:index];
@@ -246,23 +278,27 @@ static const BOOL kEnableContinueLabel = YES;
         y = markRect.origin.y - self.labelSpacing - self.captionLabel.frame.size.height;
     }
     CGFloat x = floorf((self.bounds.size.width - self.captionLabel.frame.size.width) / 2.0f);
-
+    
     // Animate the caption label
     self.captionLabel.frame = (CGRect){{x, y}, self.captionLabel.frame.size};
     [UIView animateWithDuration:self.animationDuration animations:^{
         self.captionLabel.alpha = 1.0f;
     }];
-
+    
     // If first mark, set the cutout to the center of first mark
-    if (index == 0) {
-        CGPoint center = CGPointMake(floorf(markRect.origin.x + (markRect.size.width / 2.0f)), floorf(markRect.origin.y + (markRect.size.height / 2.0f)));
-        CGRect centerZero = (CGRect){center, CGSizeZero};
-        [self setCutoutToRect:centerZero];
+    if (animated) {
+        if (index == 0) {
+            CGPoint center = CGPointMake(floorf(markRect.origin.x + (markRect.size.width / 2.0f)), floorf(markRect.origin.y + (markRect.size.height / 2.0f)));
+            CGRect centerZero = (CGRect){center, {1.0f,1.0f}};
+            [self setCutoutToRect:centerZero];
+        }
+        
+        // Animate the cutout
+        [self animateCutoutToRect:markRect];
+    } else {
+        [self setCutoutToRect:markRect];
     }
-
-    // Animate the cutout
-    [self animateCutoutToRect:markRect];
-
+    
     // Show continue lbl if first mark
     if (self.enableContinueLabel) {
         UILabel *continueLabel = self.continueLabel;
@@ -299,7 +335,8 @@ static const BOOL kEnableContinueLabel = YES;
     if ([self.delegate respondsToSelector:@selector(coachMarksViewWillCleanup:)]) {
         [self.delegate coachMarksViewWillCleanup:self];
     }
-
+    [self animateCutoutToRect:CGRectNull];
+    
     // Fade out self
     [UIView animateWithDuration:self.animationDuration
                      animations:^{
