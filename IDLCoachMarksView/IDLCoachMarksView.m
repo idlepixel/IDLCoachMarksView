@@ -9,10 +9,11 @@
 #import <QuartzCore/QuartzCore.h>
 #import "IDLCoachMarksView.h"
 
-static const CGFloat kAnimationDuration = 0.3f;
-static const CGFloat kCutoutRadius = 2.0f;
-static const CGFloat kMaxLblWidth = 230.0f;
-static const CGFloat kLblSpacing = 35.0f;
+static const CGFloat kIDLCoachMarksViewDefaultAnimationDuration = 0.3f;
+static const CGFloat kIDLCoachMarksViewDefaultCutoutRounding = 2.0f;
+static const CGFloat kIDLCoachMarksViewDefaultCutoutPadding = 2.0f;
+static const CGFloat kIDLCoachMarksViewDefaultMaximumLabelWidth = 230.0f;
+static const CGFloat kIDLCoachMarksViewDefaultLabelSpacing = 35.0f;
 static const BOOL kEnableContinueLabel = YES;
 
 @interface IDLCoachMarksView ()
@@ -26,6 +27,51 @@ static const BOOL kEnableContinueLabel = YES;
 @end
 
 @implementation IDLCoachMarksView
+
++ (CGRect)rectContainingViews:(NSArray *)viewArray relativeToView:(UIView *)referenceView
+{
+    CGRect result = CGRectNull;
+    
+    if (referenceView != nil && viewArray.count > 0) {
+        UIView *view = nil;
+        for (NSInteger i = 0; i < viewArray.count; i++) {
+            if ([[viewArray objectAtIndex:i] isKindOfClass:[UIView class]]) {
+                view = [viewArray objectAtIndex:i];
+                if (view.window == referenceView.window) {
+                    CGRect viewRect = [referenceView convertRect:view.bounds fromView:view];
+                    if (!CGRectEqualToRect(viewRect, CGRectNull) && (viewRect.size.width > 0.0f) && (viewRect.size.height > 0.0f)) {
+                        if (CGRectEqualToRect(result, CGRectNull)) {
+                            result = viewRect;
+                        } else {
+                            result = CGRectUnion(result, viewRect);
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    return result;
+}
+
++ (CGRect)rectContainingView:(UIView *)view relativeToView:(UIView *)referenceView
+{
+    NSArray *viewArray = nil;
+    if (view != nil) {
+        viewArray = @[view];
+    }
+    return [[self class] rectContainingViews:viewArray relativeToView:referenceView];
+}
+
+- (CGRect)rectContainingViews:(NSArray *)viewArray
+{
+    return [[self class] rectContainingViews:viewArray relativeToView:self];
+}
+
+- (CGRect)rectContainingView:(UIView *)view
+{
+    return [[self class] rectContainingView:view relativeToView:self];
+}
 
 #pragma mark - Methods
 
@@ -52,10 +98,10 @@ static const BOOL kEnableContinueLabel = YES;
 - (void)setup
 {
     // Default
-    self.animationDuration = kAnimationDuration;
-    self.cutoutPadding = kCutoutRadius;
-    self.maximumLabelWidth = kMaxLblWidth;
-    self.labelSpacing = kLblSpacing;
+    self.animationDuration = kIDLCoachMarksViewDefaultAnimationDuration;
+    self.cutoutRounding = kIDLCoachMarksViewDefaultCutoutRounding;
+    self.maximumLabelWidth = kIDLCoachMarksViewDefaultMaximumLabelWidth;
+    self.labelSpacing = kIDLCoachMarksViewDefaultLabelSpacing;
     self.enableContinueLabel = kEnableContinueLabel;
 
     // Shape layer mask
@@ -89,18 +135,24 @@ static const BOOL kEnableContinueLabel = YES;
     [super layoutSubviews];
     
     if (self.currentIndex && self.currentIndex.integerValue >= 0) {
-        [self goToCoachMarkIndexed:self.currentIndex.integerValue];
+        [self showCoachMarkAtIndex:self.currentIndex.integerValue];
     }
 }
 
 #pragma mark - Cutout modify
 
+- (UIBezierPath *)maskPathForCutout:(CGRect)cutout
+{
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
+    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding];
+    [maskPath appendPath:cutoutPath];
+    return maskPath;
+}
+
 - (void)setCutoutToRect:(CGRect)rect
 {
     // Define shape
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.cutoutPadding];
-    [maskPath appendPath:cutoutPath];
+    UIBezierPath *maskPath = [self maskPathForCutout:rect];
 
     // Set the new path
     self.mask.path = maskPath.CGPath;
@@ -109,9 +161,7 @@ static const BOOL kEnableContinueLabel = YES;
 - (void)animateCutoutToRect:(CGRect)rect
 {
     // Define shape
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-    UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.cutoutPadding];
-    [maskPath appendPath:cutoutPath];
+    UIBezierPath *maskPath = [self maskPathForCutout:rect];
     
     // Animate it
     CAShapeLayer *mask = self.mask;
@@ -144,7 +194,7 @@ static const BOOL kEnableContinueLabel = YES;
     if (self.currentIndex) {
         index = self.currentIndex.integerValue + 1;
     }
-    [self goToCoachMarkIndexed:index];
+    [self showCoachMarkAtIndex:index];
 }
 
 #pragma mark - Navigation
@@ -160,11 +210,11 @@ static const BOOL kEnableContinueLabel = YES;
                      }
                      completion:^(BOOL finished) {
                          // Go to the first coach mark
-                         [self goToCoachMarkIndexed:0];
+                         [self showCoachMarkAtIndex:0];
                      }];
 }
 
-- (void)goToCoachMarkIndexed:(NSUInteger)index
+- (void)showCoachMarkAtIndex:(NSUInteger)index
 {
     
     // Out of bounds
@@ -199,7 +249,7 @@ static const BOOL kEnableContinueLabel = YES;
 
     // Animate the caption label
     self.captionLabel.frame = (CGRect){{x, y}, self.captionLabel.frame.size};
-    [UIView animateWithDuration:0.3f animations:^{
+    [UIView animateWithDuration:self.animationDuration animations:^{
         self.captionLabel.alpha = 1.0f;
     }];
 
@@ -230,7 +280,7 @@ static const BOOL kEnableContinueLabel = YES;
             } else {
                 continueLabel.frame = continueLabelRect;
             }
-            [UIView animateWithDuration:0.3f delay:1.0f options:0 animations:^{
+            [UIView animateWithDuration:self.animationDuration delay:1.0f options:0 animations:^{
                 continueLabel.alpha = 1.0f;
             } completion:nil];
         } else if (index > 0 && continueLabel != nil) {

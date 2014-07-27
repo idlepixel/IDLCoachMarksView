@@ -33,12 +33,19 @@
 
 @interface IDLCoachMarksView : UIView
 
++ (CGRect)rectContainingViews:(NSArray *)viewArray relativeToView:(UIView *)referenceView;
++ (CGRect)rectContainingView:(UIView *)view relativeToView:(UIView *)referenceView;
+
+- (CGRect)rectContainingViews:(NSArray *)viewArray;
+- (CGRect)rectContainingView:(UIView *)view;
+
 @property (nonatomic, weak) id<IDLCoachMarksViewDelegate> delegate;
 @property (nonatomic, weak) id<IDLCoachMarksViewDataSource> dataSource;
 
 @property (nonatomic, strong) UIColor *maskColor;
 
 @property (nonatomic, assign) CGFloat animationDuration;
+@property (nonatomic, assign) CGFloat cutoutRounding;
 @property (nonatomic, assign) CGFloat cutoutPadding;
 @property (nonatomic, assign) CGFloat maximumLabelWidth;
 @property (nonatomic, assign) CGFloat labelSpacing;

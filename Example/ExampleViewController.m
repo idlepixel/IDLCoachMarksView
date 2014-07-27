@@ -39,7 +39,8 @@
 }
 */
  
-- (IBAction)actionShowCoachMarks:(id)sender {
+- (IBAction)actionShowCoachMarks:(id)sender
+{
     
     if (self.coachMarksView == nil) {
         IDLCoachMarksView *view = [[IDLCoachMarksView alloc] initWithFrame:self.view.bounds];
@@ -47,6 +48,7 @@
         view.delegate = self;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         self.coachMarksView = view;
+        
     }
     self.coachMarksView.alpha = 0;
     
@@ -59,12 +61,33 @@
 
 - (NSInteger)numberOfCoachMarksInView:(IDLCoachMarksView *)view
 {
-    return 3;
+    return 4;
 }
 
 - (CGRect)coachMarksView:(IDLCoachMarksView *)view rectAtIndex:(NSInteger)index
 {
-    return CGRectMake(10,10,100,100);
+    NSArray *views = nil;
+    switch (index) {
+        case 0:
+            views = @[self.textField];
+            break;
+            
+        case 1:
+            views = @[self.textField,self.textFieldLabel];
+            break;
+            
+        case 2:
+            views = @[self.slider];
+            break;
+            
+        case 3:
+            views = @[self.textField,self.textFieldLabel,self.slider,self.showCoachMarksButton];
+            break;
+            
+        default:
+            break;
+    }
+    return [view rectContainingViews:views];
 }
 
 - (NSString *)coachMarksView:(IDLCoachMarksView *)view captionAtIndex:(NSInteger)index
