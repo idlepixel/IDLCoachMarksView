@@ -247,38 +247,39 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 - (void)setCutoutToRect:(CGRect)rect
 {
-    [self animateCutoutToRect:rect duration:0.01f];
+    [self animateCutoutToRect:rect duration:0.01f notify:NO];
 }
 
 - (void)animateCutoutToRect:(CGRect)rect
 {
-    [self animateCutoutToRect:rect duration:self.animationDuration.floatValue];
+    [self animateCutoutToRect:rect duration:self.animationDuration.floatValue notify:YES];
 }
 
-- (void)animateCutoutToRect:(CGRect)rect duration:(NSTimeInterval)duration
+#define kAnimationKeyPath       @"path"
+
+- (void)animateCutoutToRect:(CGRect)rect duration:(NSTimeInterval)duration notify:(BOOL)notify
 {
     // Define shape
     UIBezierPath *maskPath = [self maskPathForCutout:rect];
     
     // Animate it
     CAShapeLayer *mask = self.mask;
-    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"path"];
-    anim.delegate = self;
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:kAnimationKeyPath];
+    if (notify) anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     anim.duration = duration;
     anim.removedOnCompletion = NO;
     anim.fillMode = kCAFillModeForwards;
     anim.fromValue = (__bridge id)(mask.path);
     anim.toValue = (__bridge id)(maskPath.CGPath);
-    [mask addAnimation:anim forKey:@"path"];
+    [mask addAnimation:anim forKey:kAnimationKeyPath];
     mask.path = maskPath.CGPath;
-    
     mask.fillColor = self.maskColor.CGColor;
 }
 
 - (void)cleanupCutout
 {
-    [self animateCutoutToRect:self.bounds];
+    [self animateCutoutToRect:self.bounds duration:self.animationDuration.floatValue notify:NO];
 }
 
 #pragma mark - Mask color
@@ -450,11 +451,12 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 #pragma mark - Animation delegate
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)finished
 {
-    // Delegate (coachMarksView:didNavigateTo:atIndex:)
-    if ([self.delegate respondsToSelector:@selector(coachMarksView:didNavigateToIndex:)]) {
-        [self.delegate coachMarksView:self didNavigateToIndex:self.currentIndex.integerValue];
+    if (finished) {
+        if ([self.delegate respondsToSelector:@selector(coachMarksView:didNavigateToIndex:)]) {
+            [self.delegate coachMarksView:self didNavigateToIndex:self.currentIndex.integerValue];
+        }
     }
 }
 
