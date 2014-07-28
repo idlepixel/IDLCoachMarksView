@@ -22,6 +22,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    UIColor *coachTintColor = [UIColor colorWithRed:0.15f green:0.40f blue:0.8f alpha:1.0f];
+    
+    IDLCoachMarksView *appearance = [IDLCoachMarksView appearance];
+    appearance.captionTitleColor = [UIColor whiteColor];
+    appearance.captionTitleFont = [UIFont italicSystemFontOfSize:14.0f];
+    appearance.cutoutPadding = @(4.0f);
+    
+    appearance.maskColor = [coachTintColor colorWithAlphaComponent:0.9f];
+    
+    appearance.continuePromptTitleColor = coachTintColor;
 }
 
 - (void)didReceiveMemoryWarning
@@ -29,25 +40,19 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    
-    self.coachMarksView.frame = self.view.bounds;
-}
-*/
  
 - (IBAction)actionShowCoachMarks:(id)sender
 {
-    
+    CGRect bounds = self.view.bounds;
     if (self.coachMarksView == nil) {
-        IDLCoachMarksView *view = [[IDLCoachMarksView alloc] initWithFrame:self.view.bounds];
+        IDLCoachMarksView *view = [[IDLCoachMarksView alloc] initWithFrame:bounds];
         view.dataSource = self;
         view.delegate = self;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         self.coachMarksView = view;
+        
+    } else {
+        self.coachMarksView.frame = bounds;
         
     }
     self.coachMarksView.alpha = 0;
@@ -61,7 +66,7 @@
 
 - (NSInteger)numberOfCoachMarksInView:(IDLCoachMarksView *)view
 {
-    return 4;
+    return 5;
 }
 
 - (CGRect)coachMarksView:(IDLCoachMarksView *)view rectAtIndex:(NSInteger)index
@@ -81,6 +86,11 @@
             break;
             
         case 3:
+            views = @[self.showCoachMarksButton];
+            break;
+            break;
+            
+        case 4:
             views = @[self.textField,self.textFieldLabel,self.slider,self.showCoachMarksButton];
             break;
             
@@ -92,7 +102,32 @@
 
 - (NSString *)coachMarksView:(IDLCoachMarksView *)view captionAtIndex:(NSInteger)index
 {
-    return @"boop";
+    NSString *caption = nil;
+    switch (index) {
+        case 0:
+            caption = @"This is an input text field. You can enter text here by selecting it.";
+            break;
+            
+        case 1:
+            caption = @"This is a labelled text field.";
+            break;
+            
+        case 2:
+            caption = @"This is an input slider.";
+            break;
+            
+        case 3:
+            caption = @"This is the button that activates the coach marks.";
+            break;
+            
+        case 4:
+            caption = @"This is a collection of views. Tap the screen again to return to the app.";
+            break;
+            
+        default:
+            break;
+    }
+    return caption;
 }
 
 #pragma mark - IDLCoachMarksViewDelegate
