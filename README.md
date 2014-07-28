@@ -11,6 +11,7 @@ This fork includes the following additional functionality to the original projec
 * Cleaned up and modernised code (debatable)
 * Improved delegate notification
 * Ability to delay the transition to the next coach mark using the delegate (useful for scrolling before display)
+* Cutout can have a border and/or an outer glow
 
 # WSCoachMarksView
 
