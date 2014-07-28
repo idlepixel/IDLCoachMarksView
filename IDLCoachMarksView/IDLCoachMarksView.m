@@ -231,13 +231,11 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 - (UIBezierPath *)maskPathForCutout:(CGRect)cutout
 {
-    NSLog(@"cutout: %@",NSStringFromCGRect(cutout));
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
     if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
         CGFloat padding = self.cutoutPadding.floatValue;
         if (padding != 0.0f) {
             cutout = CGRectInset(cutout, -padding, -padding);
-            NSLog(@"cutout inset: %@",NSStringFromCGRect(cutout));
         }
         if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
             UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding.floatValue];
@@ -324,8 +322,6 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 - (void)showCoachMarkAtIndex:(NSUInteger)index animated:(BOOL)animated
 {
-    NSLog(@"index: %i",index);
-    
     // Out of bounds
     if (index >= [self dataSourceNumberOfCoachMarks]) {
         [self cleanup];
@@ -338,8 +334,6 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     // Coach mark definition
     NSString *markCaption = [self dataSourceCaptionAtIndex:index];
     CGRect markRect = [self dataSourceRectAtIndex:index];
-    
-    NSLog(@"markRect: %@",NSStringFromCGRect(markRect));
     
     // Delegate (coachMarksView:willNavigateTo:atIndex:)
     if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndex:)]) {
