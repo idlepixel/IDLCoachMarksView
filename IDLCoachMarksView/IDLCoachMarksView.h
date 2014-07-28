@@ -62,8 +62,9 @@
 
 @property (nonatomic, strong) NSNumber *maximumLabelWidth;
 
++ (IDLCoachMarksView *)showCoachMarksInView:(UIView *)superview dataSource:(id<IDLCoachMarksViewDataSource>)dataSource delegate:(id<IDLCoachMarksViewDelegate>)delegate;
+- (id)initCoachMarksInView:(UIView *)superview dataSource:(id<IDLCoachMarksViewDataSource>)dataSource delegate:(id<IDLCoachMarksViewDelegate>)delegate;
 
-- (id)initWithFrame:(CGRect)frame;
 - (void)configure;
 - (void)applyAppearanceDefaults:(BOOL)force;
 - (void)showCoachMarks;

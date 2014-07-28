@@ -83,6 +83,28 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 #pragma mark - Methods
 
++ (IDLCoachMarksView *)showCoachMarksInView:(UIView *)superview dataSource:(id<IDLCoachMarksViewDataSource>)dataSource delegate:(id<IDLCoachMarksViewDelegate>)delegate
+{
+    IDLCoachMarksView *coachMarksView = [[IDLCoachMarksView alloc] initCoachMarksInView:superview dataSource:dataSource delegate:delegate];
+    [coachMarksView showCoachMarks];
+    return coachMarksView;
+}
+
+- (id)initCoachMarksInView:(UIView *)superview dataSource:(id<IDLCoachMarksViewDataSource>)dataSource delegate:(id<IDLCoachMarksViewDelegate>)delegate
+{
+    CGRect bounds = superview.bounds;
+    self = [self initWithFrame:bounds];
+    if (self) {
+        self.dataSource = dataSource;
+        self.delegate = delegate;
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        self.alpha = 0;
+        [superview addSubview:self];
+    }
+    
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -437,9 +459,8 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
                          self.alpha = 0.0f;
                      }
                      completion:^(BOOL finished) {
-                         // Remove self
-                         [self removeFromSuperview];
                          
+                         self.hidden = YES;
                          [self cleanSubViews];
 
                          // Delegate (coachMarksViewDidCleanup:)
