@@ -19,6 +19,17 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     return size.width * size.height;
 }
 
+@interface IDLCoachMarksShowData : NSObject
+
+@property (nonatomic, assign) NSInteger index;
+@property (nonatomic, assign) BOOL animated;
+
+@end
+
+@implementation IDLCoachMarksShowData
+
+@end
+
 @interface IDLCoachMarksView ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
@@ -30,6 +41,8 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 @property (nonatomic, strong) NSNumber *currentIndex;
 
 @property (nonatomic, assign) CGRect lastBounds;
+
+@property (nonatomic, assign) BOOL delayed;
 
 @end
 
@@ -99,6 +112,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         self.delegate = delegate;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         self.alpha = 0;
+        self.hidden = YES;
         [superview addSubview:self];
     }
     
@@ -316,12 +330,14 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 - (void)userDidTap:(UITapGestureRecognizer *)recognizer
 {
-    // Go to the next coach mark
-    NSInteger index = 0;
-    if (self.currentIndex) {
-        index = self.currentIndex.integerValue + 1;
+    if (!self.delayed) {
+        // Go to the next coach mark
+        NSInteger index = 0;
+        if (self.currentIndex) {
+            index = self.currentIndex.integerValue + 1;
+        }
+        [self showCoachMarkAtIndex:index animated:YES];
     }
-    [self showCoachMarkAtIndex:index animated:YES];
 }
 
 #pragma mark - Navigation
@@ -351,17 +367,36 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         return;
     }
     
-    // Delegate (coachMarksView:willNavigateTo:atIndex:)
-    if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndex:)]) {
+    NSTimeInterval delay = 0.0f;
+    if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndexWithDelay:)]) {
+        delay = [self.delegate coachMarksView:self willNavigateToIndexWithDelay:index];
+    } else if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndex:)]) {
         [self.delegate coachMarksView:self willNavigateToIndex:index];
     }
     
+    IDLCoachMarksShowData *showData = [IDLCoachMarksShowData new];
+    showData.index = index;
+    showData.animated = animated;
+    
+    if (delay == 0.0f) {
+        [self delayedShowCoachMark:showData];
+    } else {
+        self.delayed = YES;
+        [self performSelector:@selector(delayedShowCoachMark:) withObject:showData afterDelay:delay];
+    }
+}
+
+
+- (void)delayedShowCoachMark:(IDLCoachMarksShowData *)showData
+{
+    self.delayed = NO;
+    
     // Current index
-    self.currentIndex = @(index);
+    self.currentIndex = @(showData.index);
     
     // Coach mark definition
-    NSString *markCaption = [self dataSourceCaptionAtIndex:index];
-    CGRect markRect = [self dataSourceRectAtIndex:index];
+    NSString *markCaption = [self dataSourceCaptionAtIndex:showData.index];
+    CGRect markRect = [self dataSourceRectAtIndex:showData.index];
 
     CGRect bounds = self.bounds;
     
@@ -395,8 +430,8 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     }];
     
     // If first mark, set the cutout to the center of first mark
-    if (animated) {
-        if (index == 0) {
+    if (showData.animated) {
+        if (showData.index == 0) {
             CGPoint center = CGPointMake(floorf(markRect.origin.x + (markRect.size.width / 2.0f)), floorf(markRect.origin.y + (markRect.size.height / 2.0f)));
             CGRect centerZero = (CGRect){center, {1.0f,1.0f}};
             [self setCutoutToRect:centerZero];
@@ -480,6 +515,8 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         }
     }
 }
+
+#pragma mark - IDLCoachMarksViewDataSource
 
 - (NSInteger)dataSourceNumberOfCoachMarks
 {

@@ -83,6 +83,7 @@
 @protocol IDLCoachMarksViewDelegate <NSObject>
 
 @optional
+- (NSTimeInterval)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndexWithDelay:(NSInteger)index;
 - (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSInteger)index;
 - (void)coachMarksView:(IDLCoachMarksView*)coachMarksView didNavigateToIndex:(NSInteger)index;
 - (void)coachMarksViewWillCleanup:(IDLCoachMarksView*)coachMarksView;

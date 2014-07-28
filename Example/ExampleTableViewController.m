@@ -137,15 +137,18 @@
 
 #pragma mark - IDLCoachMarksViewDelegate
 
-- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSInteger)index
+- (NSTimeInterval)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndexWithDelay:(NSInteger)index
 {
     if (index == 1) {
         [self.tableView scrollToRowAtIndexPath:kTopIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
     } else if (index == 2) {
         [self.tableView scrollToRowAtIndexPath:kBottomIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+        return 0.3f;
     } else if (index == 3) {
-        [self.tableView scrollRectToVisible:CGRectMake(0.0f, 0.0f, 10.0f, 10.0f) animated:NO];
+        [self.tableView scrollRectToVisible:CGRectMake(0.0f, 0.0f, 10.0f, 10.0f) animated:YES];
+        return 0.3f;
     }
+    return 0.0f;
 }
 
 @end
