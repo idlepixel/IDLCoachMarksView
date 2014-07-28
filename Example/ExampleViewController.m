@@ -50,14 +50,11 @@
         view.delegate = self;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         self.coachMarksView = view;
-        
-    } else {
-        self.coachMarksView.frame = bounds;
-        
     }
     self.coachMarksView.alpha = 0;
     
-    [self.view addSubview:self.coachMarksView];
+    self.coachMarksView.frame = self.tabBarController.view.bounds;
+    [self.tabBarController.view addSubview:self.coachMarksView];
     
     [self.coachMarksView showCoachMarks];
 }
@@ -66,7 +63,7 @@
 
 - (NSInteger)numberOfCoachMarksInView:(IDLCoachMarksView *)view
 {
-    return 5;
+    return 6;
 }
 
 - (CGRect)coachMarksView:(IDLCoachMarksView *)view rectAtIndex:(NSInteger)index
@@ -88,10 +85,13 @@
         case 3:
             views = @[self.showCoachMarksButton];
             break;
-            break;
             
         case 4:
             views = @[self.textField,self.textFieldLabel,self.slider,self.showCoachMarksButton];
+            break;
+            
+        case 5:
+            views = @[self.tabBarController.tabBar];
             break;
             
         default:
@@ -121,7 +121,11 @@
             break;
             
         case 4:
-            caption = @"This is a collection of views. Tap the screen again to return to the app.";
+            caption = @"This is a collection of views.";
+            break;
+            
+        case 5:
+            caption = @"This is the app's tab bar. The other tabs have other coach mark usage examples. Tap the screen again to return to the app.";
             break;
             
         default:

@@ -17,22 +17,9 @@
 		A708BA301983D69B00658DA1 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */; };
 		A708BA331983D69B00658DA1 /* ExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA321983D69B00658DA1 /* ExampleViewController.m */; };
 		A708BA351983D69B00658DA1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A708BA341983D69B00658DA1 /* Images.xcassets */; };
-		A708BA3C1983D69C00658DA1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA3B1983D69C00658DA1 /* XCTest.framework */; };
-		A708BA3D1983D69C00658DA1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA191983D69B00658DA1 /* Foundation.framework */; };
-		A708BA3E1983D69C00658DA1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A708BA1D1983D69B00658DA1 /* UIKit.framework */; };
 		A708BA541983D86700658DA1 /* IDLCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA531983D86700658DA1 /* IDLCoachMarksView.m */; };
-		A708BA551983D86700658DA1 /* IDLCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA531983D86700658DA1 /* IDLCoachMarksView.m */; };
+		A708BA5819865D3100658DA1 /* ExampleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA5719865D3100658DA1 /* ExampleTableViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		A708BA3F1983D69C00658DA1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A708BA0E1983D69B00658DA1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A708BA151983D69B00658DA1;
-			remoteInfo = IDLCoachMarksViewExample;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A708BA161983D69B00658DA1 /* IDLCoachMarksViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IDLCoachMarksViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,10 +37,11 @@
 		A708BA311983D69B00658DA1 /* ExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExampleViewController.h; sourceTree = "<group>"; };
 		A708BA321983D69B00658DA1 /* ExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleViewController.m; sourceTree = "<group>"; };
 		A708BA341983D69B00658DA1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		A708BA3A1983D69C00658DA1 /* IDLCoachMarksViewExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IDLCoachMarksViewExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A708BA3B1983D69C00658DA1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		A708BA521983D86700658DA1 /* IDLCoachMarksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDLCoachMarksView.h; sourceTree = "<group>"; };
 		A708BA531983D86700658DA1 /* IDLCoachMarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDLCoachMarksView.m; sourceTree = "<group>"; };
+		A708BA5619865D3100658DA1 /* ExampleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleTableViewController.h; sourceTree = "<group>"; };
+		A708BA5719865D3100658DA1 /* ExampleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,16 +52,6 @@
 				A708BA1C1983D69B00658DA1 /* CoreGraphics.framework in Frameworks */,
 				A708BA1E1983D69B00658DA1 /* UIKit.framework in Frameworks */,
 				A708BA1A1983D69B00658DA1 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A708BA371983D69C00658DA1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A708BA3C1983D69C00658DA1 /* XCTest.framework in Frameworks */,
-				A708BA3E1983D69C00658DA1 /* UIKit.framework in Frameworks */,
-				A708BA3D1983D69C00658DA1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				A708BA161983D69B00658DA1 /* IDLCoachMarksViewExample.app */,
-				A708BA3A1983D69C00658DA1 /* IDLCoachMarksViewExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +96,8 @@
 				A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */,
 				A708BA311983D69B00658DA1 /* ExampleViewController.h */,
 				A708BA321983D69B00658DA1 /* ExampleViewController.m */,
+				A708BA5619865D3100658DA1 /* ExampleTableViewController.h */,
+				A708BA5719865D3100658DA1 /* ExampleTableViewController.m */,
 				A708BA341983D69B00658DA1 /* Images.xcassets */,
 				A708BA201983D69B00658DA1 /* Supporting Files */,
 			);
@@ -165,24 +144,6 @@
 			productReference = A708BA161983D69B00658DA1 /* IDLCoachMarksViewExample.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A708BA391983D69C00658DA1 /* IDLCoachMarksViewExampleTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A708BA4E1983D69C00658DA1 /* Build configuration list for PBXNativeTarget "IDLCoachMarksViewExampleTests" */;
-			buildPhases = (
-				A708BA361983D69C00658DA1 /* Sources */,
-				A708BA371983D69C00658DA1 /* Frameworks */,
-				A708BA381983D69C00658DA1 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A708BA401983D69C00658DA1 /* PBXTargetDependency */,
-			);
-			name = IDLCoachMarksViewExampleTests;
-			productName = IDLCoachMarksViewExampleTests;
-			productReference = A708BA3A1983D69C00658DA1 /* IDLCoachMarksViewExampleTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -191,11 +152,6 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Idlepixel;
-				TargetAttributes = {
-					A708BA391983D69C00658DA1 = {
-						TestTargetID = A708BA151983D69B00658DA1;
-					};
-				};
 			};
 			buildConfigurationList = A708BA111983D69B00658DA1 /* Build configuration list for PBXProject "IDLCoachMarksViewExample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -211,7 +167,6 @@
 			projectRoot = "";
 			targets = (
 				A708BA151983D69B00658DA1 /* IDLCoachMarksViewExample */,
-				A708BA391983D69C00658DA1 /* IDLCoachMarksViewExampleTests */,
 			);
 		};
 /* End PBXProject section */
@@ -228,13 +183,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A708BA381983D69C00658DA1 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -244,28 +192,13 @@
 			files = (
 				A708BA331983D69B00658DA1 /* ExampleViewController.m in Sources */,
 				A708BA2A1983D69B00658DA1 /* ExampleAppDelegate.m in Sources */,
+				A708BA5819865D3100658DA1 /* ExampleTableViewController.m in Sources */,
 				A708BA541983D86700658DA1 /* IDLCoachMarksView.m in Sources */,
 				A708BA261983D69B00658DA1 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A708BA361983D69C00658DA1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A708BA551983D86700658DA1 /* IDLCoachMarksView.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A708BA401983D69C00658DA1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A708BA151983D69B00658DA1 /* IDLCoachMarksViewExample */;
-			targetProxy = A708BA3F1983D69C00658DA1 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A708BA221983D69B00658DA1 /* InfoPlist.strings */ = {
@@ -395,46 +328,6 @@
 			};
 			name = Release;
 		};
-		A708BA4F1983D69C00658DA1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/IDLCoachMarksViewExample.app/IDLCoachMarksViewExample";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "IDLCoachMarksViewExample/IDLCoachMarksViewExample-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "IDLCoachMarksViewExampleTests/IDLCoachMarksViewExampleTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		A708BA501983D69C00658DA1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/IDLCoachMarksViewExample.app/IDLCoachMarksViewExample";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "IDLCoachMarksViewExample/IDLCoachMarksViewExample-Prefix.pch";
-				INFOPLIST_FILE = "IDLCoachMarksViewExampleTests/IDLCoachMarksViewExampleTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -452,15 +345,6 @@
 			buildConfigurations = (
 				A708BA4C1983D69C00658DA1 /* Debug */,
 				A708BA4D1983D69C00658DA1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A708BA4E1983D69C00658DA1 /* Build configuration list for PBXNativeTarget "IDLCoachMarksViewExampleTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A708BA4F1983D69C00658DA1 /* Debug */,
-				A708BA501983D69C00658DA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
