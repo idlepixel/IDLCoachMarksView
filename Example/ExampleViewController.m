@@ -132,7 +132,25 @@
 
 #pragma mark - IDLCoachMarksViewDelegate
 
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSInteger)index
+{
+    NSLog(@"coachMarksView:%@<%p> willNavigateToIndex:%i",coachMarksView.class,coachMarksView,index);
+}
 
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView didNavigateToIndex:(NSInteger)index
+{
+    NSLog(@"coachMarksView:%@<%p> didNavigateToIndex:%i",coachMarksView.class,coachMarksView,index);
+}
+
+- (void)coachMarksViewWillCleanup:(IDLCoachMarksView*)coachMarksView
+{
+    NSLog(@"coachMarksViewWillCleanup:%@<%p>",coachMarksView.class,coachMarksView);
+}
+
+- (void)coachMarksViewDidCleanup:(IDLCoachMarksView*)coachMarksView
+{
+    NSLog(@"coachMarksViewDidCleanup:%@<%p>",coachMarksView.class,coachMarksView);
+}
 
 
 @end
