@@ -1,3 +1,17 @@
+#IDLCoachMarksView
+
+This fork includes the following additional functionality to the original project (at the time of forking):
+* Example project with usage examples
+* Uses a data source instead of a pre-baked array of coach marks
+* Requires ARC, tested for minimum iOS 6
+* Configurable display properties (size/padding/rounding/fonts/colors)
+* Uses UIAppearance
+* Support for view size changes while displaying coach marks
+* Rotation support
+* Cleaned up and modernised code (debatable)
+* Improved delegate notification
+* Ability to delay the transition to the next coach mark using the delegate (useful for scrolling before display)
+
 # WSCoachMarksView
 
 WSCoachMarksView is an iOS drop-in class that displays user coach marks with a rectangular cutout over an existing UI. This approach leverages your actual UI as part of the onboarding process for your user. Simply define an array of rectangles (CGRect) and their accompanying captions.
