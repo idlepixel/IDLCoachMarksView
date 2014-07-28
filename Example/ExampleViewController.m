@@ -54,7 +54,7 @@
     
     [self.view addSubview:self.coachMarksView];
     
-    [self.coachMarksView start];
+    [self.coachMarksView showCoachMarks];
 }
 
 #pragma mark - IDLCoachMarksViewDataSource

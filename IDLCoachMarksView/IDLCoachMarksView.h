@@ -42,17 +42,31 @@
 @property (nonatomic, weak) id<IDLCoachMarksViewDelegate> delegate;
 @property (nonatomic, weak) id<IDLCoachMarksViewDataSource> dataSource;
 
-@property (nonatomic, strong) UIColor *maskColor;
+@property (nonatomic, strong) NSNumber *animationDuration               UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *cutoutRounding                  UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *cutoutPadding                   UI_APPEARANCE_SELECTOR;
 
-@property (nonatomic, assign) CGFloat animationDuration;
-@property (nonatomic, assign) CGFloat cutoutRounding;
-@property (nonatomic, assign) CGFloat cutoutPadding;
-@property (nonatomic, assign) CGFloat maximumLabelWidth;
-@property (nonatomic, assign) CGFloat labelSpacing;
-@property (nonatomic, assign) BOOL enableContinueLabel;
+@property (nonatomic, strong) NSNumber *cutoutCaptionMargin             UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, strong) UIFont *captionTitleFont                  UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *captionTitleColor                UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, strong) NSString *continuePrompt                  UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIFont *continuePromptTitleFont           UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *continuePromptTitleColor         UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *continuePromptBackgroundColor    UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *continuePromptHeight            UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *continuePromptEnabled           UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, strong) UIColor *maskColor                        UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, strong) NSNumber *maximumLabelWidth;
+
 
 - (id)initWithFrame:(CGRect)frame;
-- (void)start;
+- (void)configure;
+- (void)applyAppearanceDefaults:(BOOL)force;
+- (void)showCoachMarks;
 
 @end
 

@@ -11,11 +11,8 @@
 
 static const CGFloat kIDLCoachMarksViewDefaultAnimationDuration = 0.3f;
 static const CGFloat kIDLCoachMarksViewDefaultCutoutRounding = 2.0f;
-static const CGFloat kIDLCoachMarksViewDefaultCutoutPadding = 30.0f;
-static const CGFloat kIDLCoachMarksViewDefaultMaximumLabelWidth = 230.0f;
-static const CGFloat kIDLCoachMarksViewDefaultLabelSpacing = 35.0f;
-static const BOOL kEnableContinueLabel = YES;
-
+static const CGFloat kIDLCoachMarksViewDefaultCutoutPadding = 2.0f;
+static const CGFloat kIDLCoachMarksViewDefaultCutoutCaptionMargin = 20.0f;
 
 CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 {
@@ -24,9 +21,11 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 @interface IDLCoachMarksView ()
 
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+
 @property (nonatomic, strong) UILabel *captionLabel;
 @property (nonatomic, strong) CAShapeLayer *mask;
-@property (nonatomic, strong) UILabel *continueLabel;
+@property (nonatomic, strong) UILabel *continuePromptLabel;
 
 @property (nonatomic, strong) NSNumber *currentIndex;
 
@@ -89,7 +88,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     self = [super initWithFrame:frame];
     if (self) {
         // Setup
-        [self setup];
+        [self configure];
     }
     return self;
 }
@@ -99,45 +98,71 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Setup
-        [self setup];
+        [self configure];
     }
     return self;
 }
 
-- (void)setup
+- (void)configure
 {
-    // Default
-    self.animationDuration = kIDLCoachMarksViewDefaultAnimationDuration;
-    self.cutoutRounding = kIDLCoachMarksViewDefaultCutoutRounding;
-    self.cutoutPadding = kIDLCoachMarksViewDefaultCutoutPadding;
-    self.maximumLabelWidth = kIDLCoachMarksViewDefaultMaximumLabelWidth;
-    self.labelSpacing = kIDLCoachMarksViewDefaultLabelSpacing;
-    self.enableContinueLabel = kEnableContinueLabel;
+    // Apply appearance defaults
+    [self applyAppearanceDefaults:NO];
+    
+    // Hide until unvoked
+    self.hidden = YES;
+}
 
+- (void)initializeSubViews
+{
+    [self cleanSubViews];
+    
     // Shape layer mask
     CAShapeLayer *mask = [CAShapeLayer layer];
     [mask setFillRule:kCAFillRuleEvenOdd];
-    [mask setFillColor:[[UIColor colorWithHue:0.0f saturation:0.0f brightness:0.0f alpha:0.9f] CGColor]];
+    [mask setFillColor:[self.maskColor CGColor]];
     [self.layer addSublayer:mask];
     self.mask = mask;
-
+    
     // Capture touches
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userDidTap:)];
-    [self addGestureRecognizer:tapGestureRecognizer];
-
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userDidTap:)];
+    [self addGestureRecognizer:self.tapGestureRecognizer];
+    
     // Captions
-    self.captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.maximumLabelWidth, 0.0f)];
-    self.captionLabel.backgroundColor = [UIColor clearColor];
-    self.captionLabel.textColor = [UIColor whiteColor];
-    self.captionLabel.font = [UIFont systemFontOfSize:20.0f];
-    self.captionLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.captionLabel.numberOfLines = 0;
-    self.captionLabel.textAlignment = NSTextAlignmentCenter;
-    self.captionLabel.alpha = 0.0f;
-    [self addSubview:self.captionLabel];
+    UILabel *captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.bounds.size.width, 0.0f)];
+    captionLabel.backgroundColor = [UIColor clearColor];
+    captionLabel.textColor = self.captionTitleColor;
+    captionLabel.font = self.captionTitleFont;
+    captionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    captionLabel.numberOfLines = 0;
+    captionLabel.textAlignment = NSTextAlignmentCenter;
+    captionLabel.alpha = 0.0f;
+    [self addSubview:captionLabel];
+    self.captionLabel = captionLabel;
+}
 
-    // Hide until unvoked
-    self.hidden = YES;
+- (void)cleanSubViews
+{
+    // Shape layer mask
+    if (self.mask) {
+        [self.mask removeFromSuperlayer];
+        self.mask = nil;
+    }
+    // Capture touches
+    if (self.tapGestureRecognizer) {
+        [self removeGestureRecognizer:self.tapGestureRecognizer];
+        self.tapGestureRecognizer = nil;
+    }
+    // Captions
+    if (self.captionLabel) {
+        [self.captionLabel removeFromSuperview];
+        self.captionLabel = nil;
+    }
+    
+    // Continue prompt
+    if (self.continuePromptLabel) {
+        [self.continuePromptLabel removeFromSuperview];
+        self.continuePromptLabel = nil;
+    }
 }
 
 - (void)layoutSubviews
@@ -153,6 +178,55 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     }
 }
 
+- (void)applyAppearanceDefaults:(BOOL)force
+{
+    IDLCoachMarksView *appearance = [IDLCoachMarksView appearance];
+    
+    if (appearance.animationDuration == nil || force) {
+        appearance.animationDuration = @(kIDLCoachMarksViewDefaultAnimationDuration);
+    }
+    if (appearance.cutoutRounding == nil || force) {
+        appearance.cutoutRounding = @(kIDLCoachMarksViewDefaultCutoutRounding);
+    }
+    if (appearance.cutoutPadding == nil || force) {
+        appearance.cutoutPadding = @(kIDLCoachMarksViewDefaultCutoutPadding);
+    }
+    
+    if (appearance.cutoutCaptionMargin == nil || force) {
+        appearance.cutoutCaptionMargin = @(kIDLCoachMarksViewDefaultCutoutCaptionMargin);
+    }
+    
+    if (appearance.captionTitleFont == nil || force) {
+        appearance.captionTitleFont = [UIFont systemFontOfSize:20.0f];
+    }
+    if (appearance.captionTitleColor == nil || force) {
+        appearance.captionTitleColor = [UIColor whiteColor];
+    }
+    
+    if (appearance.continuePrompt == nil || force) {
+        appearance.continuePrompt = @"Tap to continue";
+    }
+    if (appearance.continuePromptTitleFont == nil || force) {
+        appearance.continuePromptTitleFont = [UIFont boldSystemFontOfSize:13.0f];
+    }
+    if (appearance.continuePromptTitleColor == nil || force) {
+        appearance.continuePromptTitleColor = [UIColor blackColor];
+    }
+    if (appearance.continuePromptBackgroundColor == nil || force) {
+        appearance.continuePromptBackgroundColor = [UIColor whiteColor];
+    }
+    if (appearance.continuePromptHeight == nil || force) {
+        appearance.continuePromptHeight = @(30.0f);
+    }
+    if (appearance.continuePromptEnabled == nil || force) {
+        appearance.continuePromptEnabled = @(YES);
+    }
+    
+    if (appearance.maskColor == nil || force) {
+        appearance.maskColor = [[UIColor blackColor] colorWithAlphaComponent:0.85f];
+    }
+}
+
 #pragma mark - Cutout modify
 
 - (UIBezierPath *)maskPathForCutout:(CGRect)cutout
@@ -160,13 +234,13 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     NSLog(@"cutout: %@",NSStringFromCGRect(cutout));
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
     if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
-        CGFloat padding = self.cutoutPadding;
+        CGFloat padding = self.cutoutPadding.floatValue;
         if (padding != 0.0f) {
             cutout = CGRectInset(cutout, -padding, -padding);
             NSLog(@"cutout inset: %@",NSStringFromCGRect(cutout));
         }
         if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
-            UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding];
+            UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding.floatValue];
             [maskPath appendPath:cutoutPath];
         }
     }
@@ -175,14 +249,15 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 - (void)setCutoutToRect:(CGRect)rect
 {
-    // Define shape
-    UIBezierPath *maskPath = [self maskPathForCutout:rect];
-
-    // Set the new path
-    self.mask.path = maskPath.CGPath;
+    [self animateCutoutToRect:rect duration:0.01f];
 }
 
 - (void)animateCutoutToRect:(CGRect)rect
+{
+    [self animateCutoutToRect:rect duration:self.animationDuration.floatValue];
+}
+
+- (void)animateCutoutToRect:(CGRect)rect duration:(NSTimeInterval)duration
 {
     // Define shape
     UIBezierPath *maskPath = [self maskPathForCutout:rect];
@@ -192,13 +267,15 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"path"];
     anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    anim.duration = self.animationDuration;
+    anim.duration = duration;
     anim.removedOnCompletion = NO;
     anim.fillMode = kCAFillModeForwards;
     anim.fromValue = (__bridge id)(mask.path);
     anim.toValue = (__bridge id)(maskPath.CGPath);
     [mask addAnimation:anim forKey:@"path"];
     mask.path = maskPath.CGPath;
+    
+    mask.fillColor = self.maskColor.CGColor;
 }
 
 - (void)cleanupCutout
@@ -228,12 +305,14 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 #pragma mark - Navigation
 
-- (void)start
+- (void)showCoachMarks
 {
+    [self initializeSubViews];
+    
     // Fade in self
     self.alpha = 0.0f;
     self.hidden = NO;
-    [UIView animateWithDuration:self.animationDuration
+    [UIView animateWithDuration:self.animationDuration.floatValue
                      animations:^{
                          self.alpha = 1.0f;
                      }
@@ -267,22 +346,35 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         [self.delegate coachMarksView:self willNavigateToIndex:index];
     }
 
-    // Calculate the caption position and size
-    self.captionLabel.alpha = 0.0f;
-    self.captionLabel.frame = CGRectMake(0.0f, 0.0f, self.maximumLabelWidth, 0.0f);
-    self.captionLabel.text = markCaption;
-    [self.captionLabel sizeToFit];
-    CGFloat y = markRect.origin.y + markRect.size.height + self.labelSpacing;
-    CGFloat bottomY = y + self.captionLabel.frame.size.height + self.labelSpacing;
-    if (bottomY > self.bounds.size.height) {
-        y = markRect.origin.y - self.labelSpacing - self.captionLabel.frame.size.height;
+    CGRect bounds = self.bounds;
+    
+    CGFloat maximumLabelWidth;
+    if (self.maximumLabelWidth) {
+        maximumLabelWidth = self.maximumLabelWidth.floatValue;
+    } else {
+        maximumLabelWidth = bounds.size.width - 10.0f;
     }
-    CGFloat x = floorf((self.bounds.size.width - self.captionLabel.frame.size.width) / 2.0f);
+    
+    // Calculate the caption position and size
+    UILabel *captionLabel = self.captionLabel;
+    captionLabel.textColor = self.captionTitleColor;
+    captionLabel.font = self.captionTitleFont;
+    captionLabel.alpha = 0.0f;
+    captionLabel.frame = CGRectMake(0.0f, 0.0f, maximumLabelWidth, 0.0f);
+    captionLabel.text = markCaption;
+    [captionLabel sizeToFit];
+    CGFloat cutoutCaptionMargin = self.cutoutCaptionMargin.floatValue;
+    CGFloat y = markRect.origin.y + markRect.size.height + cutoutCaptionMargin;
+    CGFloat bottomY = y + captionLabel.frame.size.height + cutoutCaptionMargin;
+    if (bottomY > bounds.size.height) {
+        y = markRect.origin.y - cutoutCaptionMargin - captionLabel.frame.size.height;
+    }
+    CGFloat x = floorf((bounds.size.width - captionLabel.frame.size.width) / 2.0f);
     
     // Animate the caption label
-    self.captionLabel.frame = (CGRect){{x, y}, self.captionLabel.frame.size};
-    [UIView animateWithDuration:self.animationDuration animations:^{
-        self.captionLabel.alpha = 1.0f;
+    captionLabel.frame = (CGRect){{x, y}, captionLabel.frame.size};
+    [UIView animateWithDuration:self.animationDuration.floatValue animations:^{
+        captionLabel.alpha = 1.0f;
     }];
     
     // If first mark, set the cutout to the center of first mark
@@ -299,31 +391,37 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         [self setCutoutToRect:markRect];
     }
     
-    // Show continue lbl if first mark
-    if (self.enableContinueLabel) {
-        UILabel *continueLabel = self.continueLabel;
+    // Show continue label if first mark
+    BOOL removeContinuePrompt = !self.continuePromptEnabled.boolValue;
+    if (!removeContinuePrompt) {
+        UILabel *continuePromptLabel = self.continuePromptLabel;
         if (index == 0) {
-            CGRect continueLabelRect = CGRectMake(0.0f, self.bounds.size.height - 30.0f, self.bounds.size.width, 30.0f);
-            if (continueLabel == nil) {
-                continueLabel = [[UILabel alloc] initWithFrame:continueLabelRect];
-                continueLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-                continueLabel.textAlignment = NSTextAlignmentCenter;
-                continueLabel.text = @"Tap to continue";
-                continueLabel.alpha = 0.0f;
-                continueLabel.backgroundColor = [UIColor whiteColor];
-                [self addSubview:continueLabel];
-                self.continueLabel = continueLabel;
+            CGFloat continuePromptHeight = self.continuePromptHeight.floatValue;
+            CGRect continuePromptLabelRect = CGRectMake(0.0f, bounds.size.height - continuePromptHeight, bounds.size.width, continuePromptHeight);
+            if (continuePromptLabel == nil) {
+                continuePromptLabel = [[UILabel alloc] initWithFrame:continuePromptLabelRect];
+                continuePromptLabel.textAlignment = NSTextAlignmentCenter;
+                continuePromptLabel.alpha = 0.0f;
+                [self addSubview:continuePromptLabel];
+                self.continuePromptLabel = continuePromptLabel;
             } else {
-                continueLabel.frame = continueLabelRect;
+                continuePromptLabel.frame = continuePromptLabelRect;
             }
-            [UIView animateWithDuration:self.animationDuration delay:1.0f options:0 animations:^{
-                continueLabel.alpha = 1.0f;
+            continuePromptLabel.font = self.continuePromptTitleFont;
+            continuePromptLabel.text = self.continuePrompt;
+            continuePromptLabel.textColor = self.continuePromptTitleColor;
+            continuePromptLabel.backgroundColor = self.continuePromptBackgroundColor;
+            [UIView animateWithDuration:self.animationDuration.floatValue delay:1.0f options:0 animations:^{
+                continuePromptLabel.alpha = 1.0f;
             } completion:nil];
-        } else if (index > 0 && continueLabel != nil) {
+        } else if (index > 0 && continuePromptLabel != nil) {
             // Otherwise, remove the lbl
-            [continueLabel removeFromSuperview];
-            continueLabel = nil;
+            removeContinuePrompt = YES;
         }
+    }
+    if (removeContinuePrompt) {
+        [self.continuePromptLabel removeFromSuperview];
+        self.continuePromptLabel = nil;
     }
 }
 
@@ -335,16 +433,19 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     if ([self.delegate respondsToSelector:@selector(coachMarksViewWillCleanup:)]) {
         [self.delegate coachMarksViewWillCleanup:self];
     }
+    self.currentIndex = nil;
     [self cleanupCutout];
     
     // Fade out self
-    [UIView animateWithDuration:self.animationDuration
+    [UIView animateWithDuration:self.animationDuration.floatValue
                      animations:^{
                          self.alpha = 0.0f;
                      }
                      completion:^(BOOL finished) {
                          // Remove self
                          [self removeFromSuperview];
+                         
+                         [self cleanSubViews];
 
                          // Delegate (coachMarksViewDidCleanup:)
                          if ([self.delegate respondsToSelector:@selector(coachMarksViewDidCleanup:)]) {
