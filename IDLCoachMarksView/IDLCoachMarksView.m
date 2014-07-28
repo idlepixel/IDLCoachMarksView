@@ -328,18 +328,18 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         [self cleanup];
         return;
     }
-
-    // Current index
-    self.currentIndex = @(index);
-
-    // Coach mark definition
-    NSString *markCaption = [self dataSourceCaptionAtIndex:index];
-    CGRect markRect = [self dataSourceRectAtIndex:index];
     
     // Delegate (coachMarksView:willNavigateTo:atIndex:)
     if ([self.delegate respondsToSelector:@selector(coachMarksView:willNavigateToIndex:)]) {
         [self.delegate coachMarksView:self willNavigateToIndex:index];
     }
+    
+    // Current index
+    self.currentIndex = @(index);
+    
+    // Coach mark definition
+    NSString *markCaption = [self dataSourceCaptionAtIndex:index];
+    CGRect markRect = [self dataSourceRectAtIndex:index];
 
     CGRect bounds = self.bounds;
     
