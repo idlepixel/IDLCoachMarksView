@@ -46,6 +46,12 @@
 @property (nonatomic, strong) NSNumber *cutoutRounding                  UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) NSNumber *cutoutPadding                   UI_APPEARANCE_SELECTOR;
 
+@property (nonatomic, strong) UIColor *cutoutBorderColor                UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *cutoutBorderWidth               UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *cutoutBorderShadowColor          UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *cutoutBorderShadowOpacity       UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) NSNumber *cutoutBorderShadowRadius        UI_APPEARANCE_SELECTOR;
+
 @property (nonatomic, strong) NSNumber *cutoutCaptionMargin             UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic, strong) UIFont *captionTitleFont                  UI_APPEARANCE_SELECTOR;

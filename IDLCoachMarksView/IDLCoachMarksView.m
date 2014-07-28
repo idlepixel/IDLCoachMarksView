@@ -35,8 +35,11 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 @property (nonatomic, strong) UILabel *captionLabel;
-@property (nonatomic, strong) CAShapeLayer *maskShapeLayer;
 @property (nonatomic, strong) UILabel *continuePromptLabel;
+
+@property (nonatomic, strong) CAShapeLayer *maskShapeLayer;
+@property (nonatomic, strong) CAShapeLayer *borderShapeLayer;
+@property (nonatomic, strong) CAShapeLayer *borderMaskShapeLayer;
 
 @property (nonatomic, strong) NSNumber *currentIndex;
 
@@ -152,12 +155,30 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 {
     [self cleanSubViews];
     
-    // Shape layer mask
-    CAShapeLayer *mask = [CAShapeLayer layer];
-    [mask setFillRule:kCAFillRuleEvenOdd];
-    [mask setFillColor:[self.maskColor CGColor]];
-    [self.layer addSublayer:mask];
-    self.maskShapeLayer = mask;
+    // Mask shape layer
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.fillRule = kCAFillRuleEvenOdd;
+    shapeLayer.fillColor = self.maskColor.CGColor;
+    [self.layer addSublayer:shapeLayer];
+    self.maskShapeLayer = shapeLayer;
+    
+    // Border mask shape layer
+    shapeLayer = [CAShapeLayer layer];
+    shapeLayer.fillRule = kCAFillRuleEvenOdd;
+    shapeLayer.fillColor = [UIColor whiteColor].CGColor;
+    //[self.layer addSublayer:shapeLayer];
+    self.borderMaskShapeLayer = shapeLayer;
+    
+    // Border shape layer
+    shapeLayer = [CAShapeLayer layer];
+    shapeLayer.fillRule = kCAFillRuleEvenOdd;
+    shapeLayer.fillColor = self.maskColor.CGColor;
+    shapeLayer.strokeColor = self.cutoutBorderColor.CGColor;
+    shapeLayer.lineWidth = self.cutoutBorderWidth.floatValue;
+    shapeLayer.mask = self.self.borderMaskShapeLayer;
+    shapeLayer.shadowOffset = CGSizeZero;
+    [self.layer addSublayer:shapeLayer];
+    self.borderShapeLayer = shapeLayer;
     
     // Capture touches
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userDidTap:)];
@@ -226,6 +247,22 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     }
     if (appearance.cutoutPadding == nil || force) {
         appearance.cutoutPadding = @(kIDLCoachMarksViewDefaultCutoutPadding);
+    }
+    
+    if (appearance.cutoutBorderColor == nil || force) {
+        appearance.cutoutBorderColor = [UIColor blackColor];
+    }
+    if (appearance.cutoutBorderWidth == nil || force) {
+        appearance.cutoutBorderWidth = @(0.0f);
+    }
+    if (appearance.cutoutBorderShadowColor == nil || force) {
+        appearance.cutoutBorderShadowColor = [UIColor blackColor];
+    }
+    if (appearance.cutoutBorderShadowOpacity == nil || force) {
+        appearance.cutoutBorderShadowOpacity = @(0.5f);
+    }
+    if (appearance.cutoutBorderShadowRadius == nil || force) {
+        appearance.cutoutBorderShadowRadius = @(2.0f);
     }
     
     if (appearance.cutoutCaptionMargin == nil || force) {
@@ -300,22 +337,44 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 {
     CGRect cutout = [self applyCutoutPadding:rect];
     
+    UIBezierPath *borderPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding.floatValue];
+    
+    CAShapeLayer *maskShapeLayer = self.maskShapeLayer;
+    CAShapeLayer *borderShapeLayer = self.borderShapeLayer;
+    CAShapeLayer *borderMaskShapeLayer = self.borderMaskShapeLayer;
+    
+    // update layer properties
+    UIColor *maskColor = self.maskColor;
+    maskShapeLayer.fillColor = maskColor.CGColor;
+    borderShapeLayer.fillColor = [maskColor colorWithAlphaComponent:1.0f].CGColor;
+    borderShapeLayer.strokeColor = self.cutoutBorderColor.CGColor;
+    borderShapeLayer.lineWidth = self.cutoutBorderWidth.floatValue * 2.0f;
+    borderShapeLayer.shadowColor = self.cutoutBorderShadowColor.CGColor;
+    borderShapeLayer.shadowOpacity = self.cutoutBorderShadowOpacity.floatValue;
+    borderShapeLayer.shadowRadius = self.cutoutBorderShadowRadius.floatValue;
+    
     // Define shape
     UIBezierPath *maskPath = [self maskPathForCutout:cutout];
     
     // Animate it
-    CAShapeLayer *mask = self.maskShapeLayer;
+    [self animateShapeLayer:maskShapeLayer duration:duration fromPath:maskShapeLayer.path toPath:maskPath.CGPath notify:notify];
+    [self animateShapeLayer:borderShapeLayer duration:duration fromPath:borderShapeLayer.path toPath:borderPath.CGPath notify:NO];
+    
+    [self animateShapeLayer:borderMaskShapeLayer duration:duration fromPath:borderMaskShapeLayer.path toPath:maskPath.CGPath notify:NO];
+}
+
+- (void)animateShapeLayer:(CAShapeLayer *)shapeLayer duration:(NSTimeInterval)duration fromPath:(CGPathRef)fromPath toPath:(CGPathRef)toPath notify:(BOOL)notify
+{
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:kAnimationKeyPath];
     if (notify) anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     anim.duration = duration;
     anim.removedOnCompletion = NO;
     anim.fillMode = kCAFillModeForwards;
-    anim.fromValue = (__bridge id)(mask.path);
-    anim.toValue = (__bridge id)(maskPath.CGPath);
-    [mask addAnimation:anim forKey:kAnimationKeyPath];
-    mask.path = maskPath.CGPath;
-    mask.fillColor = self.maskColor.CGColor;
+    anim.fromValue = (__bridge id)(fromPath);
+    anim.toValue = (__bridge id)(toPath);
+    [shapeLayer addAnimation:anim forKey:kAnimationKeyPath];
+    shapeLayer.path = toPath;
 }
 
 - (void)cleanupCutout
@@ -491,6 +550,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
         [self.delegate coachMarksViewWillCleanup:self];
     }
     self.currentIndex = nil;
+    self.captionLabel.alpha = 0.0f;
     [self cleanupCutout];
     
     // Fade out self
