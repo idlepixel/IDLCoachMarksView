@@ -10,4 +10,8 @@
 
 @interface ExampleTableViewController : UITableViewController
 
+@property (weak, nonatomic) IBOutlet UIButton *showCoachMarksButton;
+
+- (IBAction)actionShowCoachMarks:(id)sender;
+
 @end

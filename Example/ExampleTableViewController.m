@@ -7,113 +7,145 @@
 //
 
 #import "ExampleTableViewController.h"
+#import "ExampleTableViewCell.h"
 
-@interface ExampleTableViewController ()
+#import "IDLCoachMarksView.h"
+
+@interface ExampleTableViewController () <IDLCoachMarksViewDataSource, IDLCoachMarksViewDelegate>
+
+@property (nonatomic, strong) IDLCoachMarksView *coachMarksView;
 
 @end
 
 @implementation ExampleTableViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (IBAction)actionShowCoachMarks:(id)sender
 {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
+    UIView *superview = self.tabBarController.view;
+    if (self.coachMarksView == nil) {
+        self.coachMarksView = [[IDLCoachMarksView alloc] initCoachMarksInView:superview dataSource:self delegate:self];
+        self.coachMarksView.maskColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.9f];
     }
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+    self.coachMarksView.alpha = 0;
+    self.coachMarksView.frame = superview.bounds;
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [self.coachMarksView showCoachMarks];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return 10;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    ExampleTableViewCell *cell = (ExampleTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
-    // Configure the cell...
+    cell.titleLabel.text = [NSString stringWithFormat:@"Index: %i,%i",indexPath.section,indexPath.row];
+    
+    if (indexPath.row % 2 == 0) {
+        cell.contentView.backgroundColor = [UIColor colorWithWhite:0.95f alpha:1.0f];
+    } else {
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+    }
     
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    CGFloat height = 30.0f;
+    
+    height += indexPath.row * 5.0f;
+    
+    return height;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+-(CGRect)tableRectForIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+    return rect;
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+#pragma mark - IDLCoachMarksViewDataSource
+
+- (NSInteger)numberOfCoachMarksInView:(IDLCoachMarksView *)view
 {
+    return 4;
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+#define kTopIndexPath       [NSIndexPath indexPathForRow:3 inSection:0]
+#define kBottomIndexPath    [NSIndexPath indexPathForRow:7 inSection:2]
+
+- (CGRect)coachMarksView:(IDLCoachMarksView *)view rectAtIndex:(NSInteger)index
 {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    switch (index) {
+        case 0:
+        case 3:
+            return [view rectContainingView:self.showCoachMarksButton];
+            break;
+            
+        case 1: {
+            CGRect rect = [self tableRectForIndexPath:kTopIndexPath];
+            return [view convertRect:rect fromView:self.tableView];
+        }
+            break;
+            
+        case 2: {
+            CGRect rect = [self tableRectForIndexPath:kBottomIndexPath];
+            return [view convertRect:rect fromView:self.tableView];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    return CGRectZero;
 }
-*/
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (NSString *)coachMarksView:(IDLCoachMarksView *)view captionAtIndex:(NSInteger)index
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    NSString *caption = nil;
+    switch (index) {
+        case 0:
+        case 3:
+            caption = @"This is the button that activates the coach marks.";
+            break;
+            
+        case 1:
+            caption = [NSString stringWithFormat:@"This is a table cell at {%i,%i}.",kTopIndexPath.section,kTopIndexPath.row];
+            break;
+            
+        case 2:
+            caption = [NSString stringWithFormat:@"This is a table cell at {%i,%i}.",kBottomIndexPath.section,kBottomIndexPath.row];
+            break;
+            
+        default:
+            break;
+    }
+    return caption;
 }
-*/
+
+#pragma mark - IDLCoachMarksViewDelegate
+
+- (void)coachMarksView:(IDLCoachMarksView*)coachMarksView willNavigateToIndex:(NSInteger)index
+{
+    if (index == 1) {
+        [self.tableView scrollToRowAtIndexPath:kTopIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+    } else if (index == 2) {
+        [self.tableView scrollToRowAtIndexPath:kBottomIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+    } else if (index == 3) {
+        [self.tableView scrollRectToVisible:CGRectMake(0.0f, 0.0f, 10.0f, 10.0f) animated:NO];
+    }
+}
 
 @end

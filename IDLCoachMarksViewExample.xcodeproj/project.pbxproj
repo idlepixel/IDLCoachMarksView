@@ -19,6 +19,7 @@
 		A708BA351983D69B00658DA1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A708BA341983D69B00658DA1 /* Images.xcassets */; };
 		A708BA541983D86700658DA1 /* IDLCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA531983D86700658DA1 /* IDLCoachMarksView.m */; };
 		A708BA5819865D3100658DA1 /* ExampleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA5719865D3100658DA1 /* ExampleTableViewController.m */; };
+		A708BA5B198662DF00658DA1 /* ExampleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A708BA5A198662DF00658DA1 /* ExampleTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,8 @@
 		A708BA531983D86700658DA1 /* IDLCoachMarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDLCoachMarksView.m; sourceTree = "<group>"; };
 		A708BA5619865D3100658DA1 /* ExampleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleTableViewController.h; sourceTree = "<group>"; };
 		A708BA5719865D3100658DA1 /* ExampleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleTableViewController.m; sourceTree = "<group>"; };
+		A708BA59198662DF00658DA1 /* ExampleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleTableViewCell.h; sourceTree = "<group>"; };
+		A708BA5A198662DF00658DA1 /* ExampleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,12 +95,12 @@
 			children = (
 				A708BA281983D69B00658DA1 /* ExampleAppDelegate.h */,
 				A708BA291983D69B00658DA1 /* ExampleAppDelegate.m */,
-				A708BA2B1983D69B00658DA1 /* Main_iPhone.storyboard */,
-				A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */,
 				A708BA311983D69B00658DA1 /* ExampleViewController.h */,
 				A708BA321983D69B00658DA1 /* ExampleViewController.m */,
 				A708BA5619865D3100658DA1 /* ExampleTableViewController.h */,
 				A708BA5719865D3100658DA1 /* ExampleTableViewController.m */,
+				A708BA59198662DF00658DA1 /* ExampleTableViewCell.h */,
+				A708BA5A198662DF00658DA1 /* ExampleTableViewCell.m */,
 				A708BA341983D69B00658DA1 /* Images.xcassets */,
 				A708BA201983D69B00658DA1 /* Supporting Files */,
 			);
@@ -107,6 +110,8 @@
 		A708BA201983D69B00658DA1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A708BA2B1983D69B00658DA1 /* Main_iPhone.storyboard */,
+				A708BA2E1983D69B00658DA1 /* Main_iPad.storyboard */,
 				A708BA211983D69B00658DA1 /* IDLCoachMarksViewExample-Info.plist */,
 				A708BA221983D69B00658DA1 /* InfoPlist.strings */,
 				A708BA251983D69B00658DA1 /* main.m */,
@@ -192,6 +197,7 @@
 			files = (
 				A708BA331983D69B00658DA1 /* ExampleViewController.m in Sources */,
 				A708BA2A1983D69B00658DA1 /* ExampleAppDelegate.m in Sources */,
+				A708BA5B198662DF00658DA1 /* ExampleTableViewCell.m in Sources */,
 				A708BA5819865D3100658DA1 /* ExampleTableViewController.m in Sources */,
 				A708BA541983D86700658DA1 /* IDLCoachMarksView.m in Sources */,
 				A708BA261983D69B00658DA1 /* main.m in Sources */,

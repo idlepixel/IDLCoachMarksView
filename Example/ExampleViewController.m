@@ -43,18 +43,12 @@
  
 - (IBAction)actionShowCoachMarks:(id)sender
 {
-    CGRect bounds = self.view.bounds;
+    UIView *superview = self.tabBarController.view;
     if (self.coachMarksView == nil) {
-        IDLCoachMarksView *view = [[IDLCoachMarksView alloc] initWithFrame:bounds];
-        view.dataSource = self;
-        view.delegate = self;
-        view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        self.coachMarksView = view;
+        self.coachMarksView = [[IDLCoachMarksView alloc] initCoachMarksInView:superview dataSource:self delegate:self];
     }
     self.coachMarksView.alpha = 0;
-    
-    self.coachMarksView.frame = self.tabBarController.view.bounds;
-    [self.tabBarController.view addSubview:self.coachMarksView];
+    self.coachMarksView.frame = superview.bounds;
     
     [self.coachMarksView showCoachMarks];
 }
