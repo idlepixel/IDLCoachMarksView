@@ -30,6 +30,8 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 @property (nonatomic, strong) NSNumber *currentIndex;
 
+@property (nonatomic, assign) CGRect lastBounds;
+
 @end
 
 @implementation IDLCoachMarksView
@@ -142,16 +144,9 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 {
     [super layoutSubviews];
     
-}
-
--(void)setFrame:(CGRect)frame
-{
-    BOOL changed = (!CGRectEqualToRect(frame, super.frame));
-    
-    super.frame = frame;
-    
-    if (changed) {
-        NSLog(@"frame changed: %@",NSStringFromCGRect(frame));
+    CGRect bounds = self.bounds;
+    if (!CGRectEqualToRect(self.lastBounds, bounds)) {
+        self.lastBounds = bounds;
         if (self.currentIndex && self.currentIndex.integerValue >= 0) {
             [self showCoachMarkAtIndex:self.currentIndex.integerValue animated:NO];
         }
@@ -197,13 +192,18 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"path"];
     anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    anim.duration = 2.0f;
+    anim.duration = self.animationDuration;
     anim.removedOnCompletion = NO;
     anim.fillMode = kCAFillModeForwards;
     anim.fromValue = (__bridge id)(mask.path);
     anim.toValue = (__bridge id)(maskPath.CGPath);
     [mask addAnimation:anim forKey:@"path"];
-    //mask.path = maskPath.CGPath;
+    mask.path = maskPath.CGPath;
+}
+
+- (void)cleanupCutout
+{
+    [self animateCutoutToRect:self.bounds];
 }
 
 #pragma mark - Mask color
@@ -335,7 +335,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     if ([self.delegate respondsToSelector:@selector(coachMarksViewWillCleanup:)]) {
         [self.delegate coachMarksViewWillCleanup:self];
     }
-    [self animateCutoutToRect:CGRectNull];
+    [self cleanupCutout];
     
     // Fade out self
     [UIView animateWithDuration:self.animationDuration
