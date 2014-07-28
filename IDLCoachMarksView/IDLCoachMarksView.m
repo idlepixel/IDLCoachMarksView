@@ -35,7 +35,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 @property (nonatomic, strong) UILabel *captionLabel;
-@property (nonatomic, strong) CAShapeLayer *mask;
+@property (nonatomic, strong) CAShapeLayer *maskShapeLayer;
 @property (nonatomic, strong) UILabel *continuePromptLabel;
 
 @property (nonatomic, strong) NSNumber *currentIndex;
@@ -157,7 +157,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
     [mask setFillRule:kCAFillRuleEvenOdd];
     [mask setFillColor:[self.maskColor CGColor]];
     [self.layer addSublayer:mask];
-    self.mask = mask;
+    self.maskShapeLayer = mask;
     
     // Capture touches
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userDidTap:)];
@@ -179,9 +179,9 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 - (void)cleanSubViews
 {
     // Shape layer mask
-    if (self.mask) {
-        [self.mask removeFromSuperlayer];
-        self.mask = nil;
+    if (self.maskShapeLayer) {
+        [self.maskShapeLayer removeFromSuperlayer];
+        self.maskShapeLayer = nil;
     }
     // Capture touches
     if (self.tapGestureRecognizer) {
@@ -265,18 +265,21 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 #pragma mark - Cutout modify
 
+- (CGRect)applyCutoutPadding:(CGRect)cutout
+{
+    CGFloat padding = self.cutoutPadding.floatValue;
+    if (padding != 0.0f) {
+        cutout = CGRectInset(cutout, -padding, -padding);
+    }
+    return cutout;
+}
+
 - (UIBezierPath *)maskPathForCutout:(CGRect)cutout
 {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
     if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
-        CGFloat padding = self.cutoutPadding.floatValue;
-        if (padding != 0.0f) {
-            cutout = CGRectInset(cutout, -padding, -padding);
-        }
-        if (IDLCoachMarkViewCGSizeArea(cutout.size) > 0.0f) {
-            UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding.floatValue];
-            [maskPath appendPath:cutoutPath];
-        }
+        UIBezierPath *cutoutPath = [UIBezierPath bezierPathWithRoundedRect:cutout cornerRadius:self.cutoutRounding.floatValue];
+        [maskPath appendPath:cutoutPath];
     }
     return maskPath;
 }
@@ -295,11 +298,13 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 
 - (void)animateCutoutToRect:(CGRect)rect duration:(NSTimeInterval)duration notify:(BOOL)notify
 {
+    CGRect cutout = [self applyCutoutPadding:rect];
+    
     // Define shape
-    UIBezierPath *maskPath = [self maskPathForCutout:rect];
+    UIBezierPath *maskPath = [self maskPathForCutout:cutout];
     
     // Animate it
-    CAShapeLayer *mask = self.mask;
+    CAShapeLayer *mask = self.maskShapeLayer;
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:kAnimationKeyPath];
     if (notify) anim.delegate = self;
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -323,7 +328,7 @@ CG_INLINE CGFloat IDLCoachMarkViewCGSizeArea(CGSize size)
 - (void)setMaskColor:(UIColor *)maskColor
 {
     _maskColor = maskColor;
-    [self.mask setFillColor:[maskColor CGColor]];
+    [self.maskShapeLayer setFillColor:[maskColor CGColor]];
 }
 
 #pragma mark - Touch handler
